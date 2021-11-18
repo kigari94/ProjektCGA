@@ -15,7 +15,7 @@ function main() {
 
   // Meshes
   let planeGeometry = new THREE.PlaneGeometry(200, 200);
-  let planeMaterial = new THREE.MeshLambertMaterial({color: 0xDDDDDD, wireframe: false, side: THREE.DoubleSide});
+  let planeMaterial = new THREE.MeshLambertMaterial({color: 0xf59725, wireframe: false, side: THREE.DoubleSide});
   let plane = new THREE.Mesh(planeGeometry, planeMaterial);
 
   // Placing in scene
