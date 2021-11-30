@@ -1,11 +1,13 @@
 import * as THREE from '../../lib/three.js-r134/build/three.module.js';
 import CSG from '../../lib/three-csg-2020/dist/three-csg.js';
+import {Animation, AnimationType, AnimationAxis} from "../animation/Animation.js";
 
 export default class Printer extends THREE.Group {
 
   constructor() {
     super();
 
+    this.animations = [];
     this.addParts();
   }
 
@@ -15,6 +17,27 @@ export default class Printer extends THREE.Group {
       color: 0xf52525,
       flatShading: true,
       side: THREE.DoubleSide
+    });
+
+    const frontCorpusMaterial = new THREE.MeshPhongMaterial({
+      color: 0x111111,
+      flatShading: true,
+      bumpMap: new THREE.TextureLoader().load('src/images/frontFrame.png'),
+      bumpScale: 1.0
+    });
+
+    const frontFrameTopMaterial = new THREE.MeshPhongMaterial({
+      color: 0xf52525,
+      flatShading: true,
+      bumpMap: new THREE.TextureLoader().load('src/images/frontFrameTop.png'),
+      bumpScale: 1.0
+    });
+
+    const frontFrameSideMaterial = new THREE.MeshPhongMaterial({
+      color: 0x111111,
+      flatShading: true,
+      bumpMap: new THREE.TextureLoader().load('src/images/frontFrame.png'),
+      bumpScale: 1.0
     });
 
     const metalMaterial = new THREE.MeshPhongMaterial({
@@ -51,33 +74,33 @@ export default class Printer extends THREE.Group {
 
     const positionsFrame = [
       -20, 0, -6.5,          // 0
-      -20, 0, -3.5,           // 1
-      -15, 0, -3.5,           // 2
+      -20, 0, -3.5,          // 1
+      -15, 0, -3.5,          // 2
       -15, 0, -6.5,          // 3
 
       -20, 55, -6.5,         // 4
-      -20, 55, -3.5,          // 5
-      -15, 55, -3.5,          // 6
+      -20, 55, -3.5,         // 5
+      -15, 55, -3.5,         // 6
       -15, 55, -6.5,         // 7
 
       -20, 58, -6.5,         // 8
-      -20, 58, -3.5,          // 9
-      -15, 58, -3.5,          // 10
+      -20, 58, -3.5,         // 9
+      -15, 58, -3.5,         // 10
       -15, 58, -6.5,         // 11
 
       15, 58, -6.5,          // 12
-      15, 58, -3.5,           // 13
-      20, 58, -3.5,           // 14
+      15, 58, -3.5,          // 13
+      20, 58, -3.5,          // 14
       20, 58, -6.5,          // 15
 
       15, 55, -6.5,          // 16
-      15, 55, -3.5,           // 17
-      20, 55, -3.5,           // 18
+      15, 55, -3.5,          // 17
+      20, 55, -3.5,          // 18
       20, 55, -6.5,          // 19
 
       15, 0, -6.5,           // 20
-      15, 0, -3.5,            // 21
-      20, 0, -3.5,            // 22
+      15, 0, -3.5,           // 21
+      20, 0, -3.5,           // 22
       20, 0, -6.5,           // 23
     ];
 
@@ -205,6 +228,13 @@ export default class Printer extends THREE.Group {
     corpus.castShadow = true;
     this.add(corpus);
 
+    // Front Corpus
+    const frontCorpusGeometry = new THREE.PlaneGeometry(40, 14);
+    const frontCorpus = new THREE.Mesh(frontCorpusGeometry, corpusMaterial);
+    frontCorpus.position.set(0, 5, 20);
+    frontCorpus.rotateX(THREE.MathUtils.degToRad(-45));
+    this.add(frontCorpus);
+
     // Frame
     const frameGeometry = new THREE.BufferGeometry();
     frameGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positionsFrame), 3));
@@ -214,44 +244,23 @@ export default class Printer extends THREE.Group {
     frame.castShadow = true;
     this.add(frame);
 
-    // Arch
-    // ---------------------
-    // const length = 15, width = 10;
-    //
-    // const shape = new THREE.Shape();
-    // shape.moveTo( 0,0 );
-    // shape.lineTo( 0, width );
-    // shape.lineTo( length, width );
-    // shape.lineTo( length, 0 );
-    // shape.lineTo( 0, 0 );
-    //
-    // const spline = new THREE.CatmullRomCurve3([
-    //   new THREE.Vector3(-30, 0, 0),
-    //   new THREE.Vector3(-30, 60, 0),
-    //   new THREE.Vector3(30, 60, 0),
-    //   new THREE.Vector3(30, 0, 0),
-    // ]);
-    // spline.curveType = 'catmullrom';
-    // spline.tension = 0.0;
-    //
-    // const extrudeSettings = {
-    //   steps: 100,
-    //   curveSegments: 100,
-    //   bevelEnabled: false,
-    //   // bevelSize: 1,
-    //   // bevelOffset: 0,
-    //   // bevelSegments: 10,
-    //   extrudePath: spline
-    // };
-    //
-    // const extrusionGeometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-    //
-    // const arch = new THREE.Mesh(extrusionGeometry, metalMaterial);
-    // //arch.rotation.set(THREE.MathUtils.degToRad(80), 0, 0);
-    // arch.position.set(0, 10, 0);
-    // arch.scale.set(0.5, 0.5,0.5);
-    // arch.name = 'arch';
-    // this.add(arch);
+    // Front Frame Top
+    const frontFrameTopGeometry = new THREE.PlaneGeometry(40, 3);
+    const frontFrameTop = new THREE.Mesh(frontFrameTopGeometry, frontFrameTopMaterial);
+    frontFrameTop.position.set(0, 56.5, -3.4);
+    this.add(frontFrameTop);
+
+    // Front Frame Left
+    const frontFrameLeftGeometry = new THREE.PlaneGeometry(5, 45);
+    const frontFrameLeft = new THREE.Mesh(frontFrameLeftGeometry, corpusMaterial);
+    frontFrameLeft.position.set(-17.5, 32.5, -3.5);
+    this.add(frontFrameLeft);
+
+    // Front Frame Right
+    const frontFrameRightGeometry = new THREE.PlaneGeometry(5, 45);
+    const frontFrameRight = new THREE.Mesh(frontFrameRightGeometry, corpusMaterial);
+    frontFrameRight.position.set(17.5, 32.5, -3.5);
+    this.add(frontFrameRight);
 
     // Socket
     const socketGeometry = new THREE.BufferGeometry();
@@ -270,25 +279,31 @@ export default class Printer extends THREE.Group {
     plate.castShadow = true;
     this.add(plate);
 
-    // Left Bracket
-    const leftBracketGeometry = new THREE.BoxGeometry(5,5,2);
-    const leftBracket = new THREE.Mesh(leftBracketGeometry, corpusMaterial);
-    leftBracket.position.set(-17.5, 18, -2);
-    leftBracket.castShadow = true;
-    this.add(leftBracket);
-
-    // Right Bracket
-    const rightBracket = leftBracket.clone();
-    rightBracket.position.set(17.5, 18, -2);
-    rightBracket.castShadow = true;
-    this.add(rightBracket);
-
     // Rail
     const railGeometry = new THREE.BoxGeometry(30,5,0.5);
     const rail = new THREE.Mesh(railGeometry, corpusMaterial);
-    rail.position.set(0, 18, -2);
+    rail.position.set(0, 18, -2.5);
     rail.castShadow = true;
     this.add(rail);
+
+    // Rail Animation
+    const railAnimation = new Animation(rail, AnimationType.TRANSLATION, AnimationAxis.Y);
+    railAnimation.setAmount(35);
+    railAnimation.setSpeed(10);
+    this.animations.push(railAnimation);
+
+    // Left Bracket
+    const leftBracketGeometry = new THREE.BoxGeometry(5,5,2);
+    const leftBracket = new THREE.Mesh(leftBracketGeometry, corpusMaterial);
+    leftBracket.position.set(-17.5, 0, 0);
+    leftBracket.castShadow = true;
+    rail.add(leftBracket);
+
+    // Right Bracket
+    const rightBracket = leftBracket.clone();
+    rightBracket.position.set(17.5, 0, 0);
+    rightBracket.castShadow = true;
+    rail.add(rightBracket);
 
     // Printhead
     const printheadGeometry = new THREE.BufferGeometry();
@@ -296,8 +311,17 @@ export default class Printer extends THREE.Group {
     printheadGeometry.setIndex(indicesPrinthead);
     printheadGeometry.computeVertexNormals();
     const printhead = new THREE.Mesh(printheadGeometry, corpusMaterial);
+    printhead.position.set(-13, -17, 2.25);
     printhead.castShadow = true;
-    this.add(printhead);
+    printhead.name = 'printhead';
+    rail.add(printhead);
+
+    // Printhead Animation
+    const printheadAnimation = new Animation(printhead, AnimationType.TRANSLATION, AnimationAxis.X);
+    printheadAnimation.setAmount(25);
+    printheadAnimation.setSpeed(25);
+    //printhead.userData = printheadAnimation;
+    this.animations.push(printheadAnimation);
 
     // Buttons
     const startButtonGeometry = new THREE.BoxGeometry(5,5,1);
@@ -305,6 +329,12 @@ export default class Printer extends THREE.Group {
     startButton.position.set(5, 5, 20);
     startButton.rotateX(THREE.MathUtils.degToRad(-45));
     startButton.castShadow = true;
+    startButton.name = 'startButton';
+    startButton.userData = [];
+    startButton.userData.push(
+        printheadAnimation,
+        railAnimation
+    );
     this.add(startButton);
 
     const stopButton = startButton.clone();
