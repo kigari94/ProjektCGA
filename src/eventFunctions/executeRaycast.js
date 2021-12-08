@@ -13,7 +13,7 @@ export function executeRaycast() {
     let firstHit = intersects[0].object;
 
     if (firstHit.name === 'startButton') {
-      for (let x = 0; x <= 1; x++) {
+      for (let x = 0; x <= 2; x++) {
         firstHit.userData[x].toggleEndPosition();
       }
     }

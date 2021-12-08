@@ -14,7 +14,7 @@ export default class Printer extends THREE.Group {
   addParts() {
     // Materials
     const corpusMaterial = new THREE.MeshPhongMaterial({
-      color: 0xf52525,
+      color: 0x373837,
       flatShading: true,
       side: THREE.DoubleSide
     });
@@ -27,21 +27,28 @@ export default class Printer extends THREE.Group {
     });
 
     const frontFrameTopMaterial = new THREE.MeshPhongMaterial({
-      color: 0xf52525,
-      flatShading: true,
+      color: 0x373837,
+
       bumpMap: new THREE.TextureLoader().load('src/images/frontFrameTop.png'),
       bumpScale: 1.0
     });
 
     const frontFrameSideMaterial = new THREE.MeshPhongMaterial({
-      color: 0x111111,
+      color: 0x373837,
       flatShading: true,
-      bumpMap: new THREE.TextureLoader().load('src/images/frontFrame.png'),
-      bumpScale: 1.0
+      bumpMap: new THREE.TextureLoader().load('src/images/frontFrameSide.png'),
+      bumpScale: 0.5
     });
 
-    const metalMaterial = new THREE.MeshPhongMaterial({
+    const plateMaterial = new THREE.MeshPhongMaterial({
       color: 0xe7e7e7,
+      flatShading: true,
+      transparent: true,
+      opacity: 0.8
+    });
+
+    const startButtonMaterial = new THREE.MeshPhongMaterial({
+      color: 0x198003,
       flatShading: true
     });
 
@@ -228,7 +235,7 @@ export default class Printer extends THREE.Group {
     corpus.castShadow = true;
     this.add(corpus);
 
-    // Front Corpus
+    // Front Corpus Texture
     const frontCorpusGeometry = new THREE.PlaneGeometry(40, 14);
     const frontCorpus = new THREE.Mesh(frontCorpusGeometry, corpusMaterial);
     frontCorpus.position.set(0, 5, 20);
@@ -244,22 +251,22 @@ export default class Printer extends THREE.Group {
     frame.castShadow = true;
     this.add(frame);
 
-    // Front Frame Top
+    // Front Frame Top Texture
     const frontFrameTopGeometry = new THREE.PlaneGeometry(40, 3);
     const frontFrameTop = new THREE.Mesh(frontFrameTopGeometry, frontFrameTopMaterial);
     frontFrameTop.position.set(0, 56.5, -3.4);
     this.add(frontFrameTop);
 
-    // Front Frame Left
+    // Front Frame Left Texture
     const frontFrameLeftGeometry = new THREE.PlaneGeometry(5, 45);
-    const frontFrameLeft = new THREE.Mesh(frontFrameLeftGeometry, corpusMaterial);
-    frontFrameLeft.position.set(-17.5, 32.5, -3.5);
+    const frontFrameLeft = new THREE.Mesh(frontFrameLeftGeometry, frontFrameSideMaterial);
+    frontFrameLeft.position.set(-17.5, 32.5, -3.4);
     this.add(frontFrameLeft);
 
-    // Front Frame Right
+    // Front Frame Right Texture
     const frontFrameRightGeometry = new THREE.PlaneGeometry(5, 45);
-    const frontFrameRight = new THREE.Mesh(frontFrameRightGeometry, corpusMaterial);
-    frontFrameRight.position.set(17.5, 32.5, -3.5);
+    const frontFrameRight = new THREE.Mesh(frontFrameRightGeometry, frontFrameSideMaterial);
+    frontFrameRight.position.set(17.5, 32.5, -3.4);
     this.add(frontFrameRight);
 
     // Socket
@@ -274,10 +281,16 @@ export default class Printer extends THREE.Group {
 
     // Plate
     const plateGeometry = new THREE.BoxGeometry(25,1,25);
-    const plate = new THREE.Mesh(plateGeometry, corpusMaterial);
-    plate.position.set(0, 13.5, 0);
+    const plate = new THREE.Mesh(plateGeometry, plateMaterial);
+    plate.position.set(0, 13.5, 5);
     plate.castShadow = true;
     this.add(plate);
+
+    // Plate Animation
+    const plateAnimation = new Animation(plate, AnimationType.TRANSLATION, AnimationAxis.Z);
+    plateAnimation.setAmount(-15);
+    plateAnimation.setSpeed(10);
+    this.animations.push(plateAnimation);
 
     // Rail
     const railGeometry = new THREE.BoxGeometry(30,5,0.5);
@@ -320,12 +333,11 @@ export default class Printer extends THREE.Group {
     const printheadAnimation = new Animation(printhead, AnimationType.TRANSLATION, AnimationAxis.X);
     printheadAnimation.setAmount(25);
     printheadAnimation.setSpeed(25);
-    //printhead.userData = printheadAnimation;
     this.animations.push(printheadAnimation);
 
     // Buttons
     const startButtonGeometry = new THREE.BoxGeometry(5,5,1);
-    const startButton = new THREE.Mesh(startButtonGeometry, corpusMaterial);
+    const startButton = new THREE.Mesh(startButtonGeometry, startButtonMaterial);
     startButton.position.set(5, 5, 20);
     startButton.rotateX(THREE.MathUtils.degToRad(-45));
     startButton.castShadow = true;
@@ -333,7 +345,8 @@ export default class Printer extends THREE.Group {
     startButton.userData = [];
     startButton.userData.push(
         printheadAnimation,
-        railAnimation
+        railAnimation,
+        plateAnimation
     );
     this.add(startButton);
 
@@ -341,7 +354,5 @@ export default class Printer extends THREE.Group {
     stopButton.position.set(15, 5, 20);
     stopButton.castShadow = true;
     this.add(stopButton);
-
-    // Textures
   }
 }

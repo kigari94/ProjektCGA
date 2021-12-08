@@ -31,6 +31,10 @@ function main() {
   window.scene.add(printer);
 
   // Lighting
+  const ambientLight = new THREE.AmbientLight(0xffffff);
+  ambientLight.intensity = 0.5;
+  window.scene.add(ambientLight);
+
   let spotLight = new THREE.SpotLight(0xffffff);
   spotLight.position.set(100, 100, 100);
   spotLight.intensity = 0.5;
