@@ -9,15 +9,12 @@ export function executeRaycast() {
 
   //console.log(intersects.length);
   if (intersects.length > 0) {
-    // console.log(intersects[0].object.name);
+
     let firstHit = intersects[0].object;
 
-    if(firstHit.name === 'powerKnob'){
-      //window.teleVisionPowerOn = !window.teleVisionPowerOn;
-      if(firstHit.children.length > 0){
-        firstHit.userData.toggleEndPosition();
-      }else{
-        firstHit.parent.userData.toggleEndPosition();
+    if (firstHit.name === 'startButton') {
+      for (let x = 0; x <= 2; x++) {
+        firstHit.userData[x].toggleEndPosition();
       }
     }
   }

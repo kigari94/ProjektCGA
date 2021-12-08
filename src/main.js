@@ -8,6 +8,8 @@ import Printer from './objects/Printer.js';
 
 // Event functions
 import {updateAspectRatio} from './eventFunctions/updateAspectRatio.js';
+import {calculateMousePosition} from './eventfunctions/calculateMousePosition.js';
+import {executeRaycast} from './eventfunctions/executeRaycast.js';
 
 function main() {
   window.scene = new THREE.Scene();
@@ -29,6 +31,10 @@ function main() {
   window.scene.add(printer);
 
   // Lighting
+  const ambientLight = new THREE.AmbientLight(0xffffff);
+  ambientLight.intensity = 0.5;
+  window.scene.add(ambientLight);
+
   let spotLight = new THREE.SpotLight(0xffffff);
   spotLight.position.set(100, 100, 100);
   spotLight.intensity = 0.5;
@@ -76,8 +82,17 @@ function main() {
   // Connection to HTML Element
   document.getElementById('3d_content').appendChild(window.renderer.domElement);
 
+  // Setting the clock
+  const clock = new THREE.Clock();
+
   // Main loop
   function mainLoop() {
+    const delta = clock.getDelta();
+
+    printer.animations.forEach(function (animation) {
+      animation.update(delta);
+    });
+
     window.renderer.render(window.scene, window.camera);
     requestAnimationFrame(mainLoop);
   }
@@ -87,3 +102,5 @@ function main() {
 
 window.onload = main;
 window.onresize = updateAspectRatio;
+window.onmousemove = calculateMousePosition;
+window.onclick = executeRaycast;
