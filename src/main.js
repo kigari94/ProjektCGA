@@ -2,6 +2,7 @@
 import * as THREE from '../lib/three.js-r134/build/three.module.js';
 import * as CONTROLS from '../lib/three.js-r134/examples/jsm/controls/OrbitControls.js';
 import * as DAT from '../lib/dat.gui-0.7.7/build/dat.gui.module.js';
+import * as TWEEN from '../../../lib/tween.js-18.6.4/dist/tween.esm.js';
 
 // Own modules
 import Printer from './objects/Printer.js';
@@ -92,6 +93,8 @@ function main() {
     printer.animations.forEach(function (animation) {
       animation.update(delta);
     });
+
+    TWEEN.update();
 
     window.renderer.render(window.scene, window.camera);
     requestAnimationFrame(mainLoop);

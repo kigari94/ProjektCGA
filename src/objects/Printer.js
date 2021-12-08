@@ -1,6 +1,7 @@
 import * as THREE from '../../lib/three.js-r134/build/three.module.js';
 import CSG from '../../lib/three-csg-2020/dist/three-csg.js';
 import {Animation, AnimationType, AnimationAxis} from "../animation/Animation.js";
+import * as TWEEN from '../../../../lib/tween.js-18.6.4/dist/tween.esm.js'
 
 export default class Printer extends THREE.Group {
 
@@ -282,15 +283,37 @@ export default class Printer extends THREE.Group {
     // Plate
     const plateGeometry = new THREE.BoxGeometry(25,1,25);
     const plate = new THREE.Mesh(plateGeometry, plateMaterial);
-    plate.position.set(0, 13.5, 5);
+    plate.position.set(0, 13.5, 0);
     plate.castShadow = true;
     this.add(plate);
 
     // Plate Animation
-    const plateAnimation = new Animation(plate, AnimationType.TRANSLATION, AnimationAxis.Z);
-    plateAnimation.setAmount(-15);
-    plateAnimation.setSpeed(10);
-    this.animations.push(plateAnimation);
+    let plateForwardTween = new TWEEN.Tween(plate.position).to(new THREE.Vector3(
+        plate.position.x,
+        plate.position.y,
+        plate.position.z + 10), 1000)
+        .easing(TWEEN.Easing.Linear.None)
+        .onRepeat(function(){
+          plateBackwardTween.start();
+        })
+
+    let plateBackwardTween = new TWEEN.Tween(plate.position).to(new THREE.Vector3(
+        plate.position.x,
+        plate.position.y,
+        plate.position.z -10), 1000)
+        .easing(TWEEN.Easing.Linear.None)
+        .onRepeat(function(){
+          plateOriginTween.start();
+        })
+
+    let plateOriginTween = new TWEEN.Tween(plate.position).to(new THREE.Vector3(
+        plate.position.x,
+        plate.position.y,
+        plate.position.z), 1000)
+        .easing(TWEEN.Easing.Linear.None)
+
+    plateForwardTween.chain(plateBackwardTween);
+    plateBackwardTween.chain(plateOriginTween);
 
     // Rail
     const railGeometry = new THREE.BoxGeometry(30,5,0.5);
@@ -300,10 +323,19 @@ export default class Printer extends THREE.Group {
     this.add(rail);
 
     // Rail Animation
-    const railAnimation = new Animation(rail, AnimationType.TRANSLATION, AnimationAxis.Y);
-    railAnimation.setAmount(35);
-    railAnimation.setSpeed(10);
-    this.animations.push(railAnimation);
+    let railUpTween = new TWEEN.Tween(rail.position).to(new THREE.Vector3(
+        rail.position.x,
+        rail.position.y + 35,
+        rail.position.z), 2000)
+        .easing(TWEEN.Easing.Linear.None)
+
+    let railDownTween = new TWEEN.Tween(rail.position).to(new THREE.Vector3(
+        rail.position.x,
+        rail.position.y,
+        rail.position.z), 2000)
+        .easing(TWEEN.Easing.Linear.None)
+
+    railUpTween.chain(railDownTween);
 
     // Left Bracket
     const leftBracketGeometry = new THREE.BoxGeometry(5,5,2);
@@ -329,11 +361,23 @@ export default class Printer extends THREE.Group {
     printhead.name = 'printhead';
     rail.add(printhead);
 
-    // Printhead Animation
-    const printheadAnimation = new Animation(printhead, AnimationType.TRANSLATION, AnimationAxis.X);
-    printheadAnimation.setAmount(25);
-    printheadAnimation.setSpeed(25);
-    this.animations.push(printheadAnimation);
+    // Printhead Animations
+   let printheadRightTween = new TWEEN.Tween(printhead.position).to(new THREE.Vector3(
+        printhead.position.x + 25,
+        printhead.position.y,
+        printhead.position.z), 200)
+        .easing(TWEEN.Easing.Linear.None)
+        .onRepeat(function(){
+         printheadLeftTween.start();
+       })
+
+    let printheadLeftTween = new TWEEN.Tween(printhead.position).to(new THREE.Vector3(
+        printhead.position.x,
+        printhead.position.y,
+        printhead.position.z), 200)
+        .easing(TWEEN.Easing.Linear.None)
+
+    printheadRightTween.chain(printheadLeftTween);
 
     // Buttons
     const startButtonGeometry = new THREE.BoxGeometry(5,5,1);
@@ -342,17 +386,25 @@ export default class Printer extends THREE.Group {
     startButton.rotateX(THREE.MathUtils.degToRad(-45));
     startButton.castShadow = true;
     startButton.name = 'startButton';
-    startButton.userData = [];
-    startButton.userData.push(
-        printheadAnimation,
-        railAnimation,
-        plateAnimation
-    );
+    startButton.userData = {
+      printheadRightTween,
+      railUpTween,
+      plateForwardTween
+    }
+
     this.add(startButton);
 
-    const stopButton = startButton.clone();
+    const stopButtonGeometry = new THREE.BoxGeometry(5,5,1);
+    const stopButton = new THREE.Mesh(stopButtonGeometry, startButtonMaterial);
     stopButton.position.set(15, 5, 20);
+    stopButton.rotateX(THREE.MathUtils.degToRad(-45));
     stopButton.castShadow = true;
+    stopButton.name = 'stopButton';
+    stopButton.userData = {
+      printheadRightTween,
+      railUpTween,
+      plateForwardTween
+    }
     this.add(stopButton);
   }
 }
