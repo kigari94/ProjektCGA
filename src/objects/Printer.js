@@ -53,6 +53,21 @@ export default class Printer extends THREE.Group {
       flatShading: true
     });
 
+    const stopButtonMaterial = new THREE.MeshPhongMaterial({
+      color: 0xfc1703,
+      flatShading: true
+    });
+
+    const cubeMaterial = new THREE.MeshLambertMaterial({
+      visible: true,
+      colorWrite: false
+    });
+
+    const ballMaterial = new THREE.MeshPhongMaterial({
+      color: 0xffaa00,
+      flatShading: true
+    })
+
     // Positions
     const positionsCorpus = [
       -20, 0, -20,          // 0
@@ -291,28 +306,23 @@ export default class Printer extends THREE.Group {
     let plateForwardTween = new TWEEN.Tween(plate.position).to(new THREE.Vector3(
         plate.position.x,
         plate.position.y,
-        plate.position.z + 10), 1000)
+        plate.position.z + 10), 265)
         .easing(TWEEN.Easing.Linear.None)
-        .onRepeat(function(){
-          plateBackwardTween.start();
-        })
 
     let plateBackwardTween = new TWEEN.Tween(plate.position).to(new THREE.Vector3(
         plate.position.x,
         plate.position.y,
-        plate.position.z -10), 1000)
+        plate.position.z -10), 265)
         .easing(TWEEN.Easing.Linear.None)
-        .onRepeat(function(){
-          plateOriginTween.start();
-        })
 
     let plateOriginTween = new TWEEN.Tween(plate.position).to(new THREE.Vector3(
         plate.position.x,
         plate.position.y,
-        plate.position.z), 1000)
+        plate.position.z), 265)
         .easing(TWEEN.Easing.Linear.None)
 
     plateForwardTween.chain(plateBackwardTween);
+    plateOriginTween.chain(plateForwardTween);
     plateBackwardTween.chain(plateOriginTween);
 
     // Rail
@@ -328,6 +338,9 @@ export default class Printer extends THREE.Group {
         rail.position.y + 35,
         rail.position.z), 2000)
         .easing(TWEEN.Easing.Linear.None)
+        .onComplete(function(){
+          plateForwardTween.stop();
+        })
 
     let railDownTween = new TWEEN.Tween(rail.position).to(new THREE.Vector3(
         rail.position.x,
@@ -335,7 +348,7 @@ export default class Printer extends THREE.Group {
         rail.position.z), 2000)
         .easing(TWEEN.Easing.Linear.None)
 
-    railUpTween.chain(railDownTween);
+    // railUpTween.chain(railDownTween);
 
     // Left Bracket
     const leftBracketGeometry = new THREE.BoxGeometry(5,5,2);
@@ -365,7 +378,7 @@ export default class Printer extends THREE.Group {
    let printheadRightTween = new TWEEN.Tween(printhead.position).to(new THREE.Vector3(
         printhead.position.x + 25,
         printhead.position.y,
-        printhead.position.z), 200)
+        printhead.position.z), 250)
         .easing(TWEEN.Easing.Linear.None)
         .onRepeat(function(){
          printheadLeftTween.start();
@@ -374,10 +387,32 @@ export default class Printer extends THREE.Group {
     let printheadLeftTween = new TWEEN.Tween(printhead.position).to(new THREE.Vector3(
         printhead.position.x,
         printhead.position.y,
-        printhead.position.z), 200)
+        printhead.position.z), 250)
         .easing(TWEEN.Easing.Linear.None)
 
     printheadRightTween.chain(printheadLeftTween);
+
+    // Printing Object
+    const ballGeometry = new THREE.SphereGeometry(10, 10, 10);
+    const ball = new THREE.Mesh(ballGeometry, ballMaterial);
+    ball.position.set(0, 10.5, 0);
+    ball.castShadow = true;
+    ball.renderOrder = 1;
+    plate.add(ball);
+
+    // Hiding Cube
+    const cubeGeometry = new THREE.BoxGeometry(20, 20, 20);
+    const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    cube.position.set(0, 10.5, 0);
+    cube.renderOrder = 0;
+    plate.add(cube);
+
+    // Unhide Animation
+    let cubeUpTween = new TWEEN.Tween(cube.position).to(new THREE.Vector3(
+        cube.position.x,
+        cube.position.y + 35,
+        cube.position.z), 2000)
+        .easing(TWEEN.Easing.Linear.None)
 
     // Buttons
     const startButtonGeometry = new THREE.BoxGeometry(5,5,1);
@@ -389,13 +424,13 @@ export default class Printer extends THREE.Group {
     startButton.userData = {
       printheadRightTween,
       railUpTween,
-      plateForwardTween
+      plateForwardTween,
+      cubeUpTween
     }
-
     this.add(startButton);
 
     const stopButtonGeometry = new THREE.BoxGeometry(5,5,1);
-    const stopButton = new THREE.Mesh(stopButtonGeometry, startButtonMaterial);
+    const stopButton = new THREE.Mesh(stopButtonGeometry, stopButtonMaterial);
     stopButton.position.set(15, 5, 20);
     stopButton.rotateX(THREE.MathUtils.degToRad(-45));
     stopButton.castShadow = true;

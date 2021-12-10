@@ -16,14 +16,16 @@ export function executeRaycast() {
       firstHit.userData.printheadRightTween.start();
       firstHit.userData.railUpTween.start();
       firstHit.userData.plateForwardTween.start();
+      firstHit.userData.cubeUpTween.start();
 
-      firstHit.userData.printheadRightTween.repeat(10);
-      firstHit.userData.plateForwardTween.repeat(10);
+      firstHit.userData.printheadRightTween.repeat(6);
+      // firstHit.userData.plateForwardTween.repeat(10);
     }
     else if(firstHit.name === 'stopButton'){
       firstHit.userData.printheadRightTween.stop();
       firstHit.userData.railUpTween.stop();
       firstHit.userData.plateForwardTween.stop();
+      firstHit.userData.cubeUpTween.stop();
     }
   }
 }
