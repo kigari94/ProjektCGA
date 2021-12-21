@@ -18,7 +18,7 @@ export function executeRaycast() {
       firstHit.userData.plateForwardTween.start();
       firstHit.userData.cubeUpTween.start();
 
-      firstHit.userData.printheadRightTween.repeat(6);
+      firstHit.userData.printheadRightTween.repeat(8);
       // firstHit.userData.plateForwardTween.repeat(10);
     }
     else if(firstHit.name === 'stopButton'){

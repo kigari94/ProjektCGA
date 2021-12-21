@@ -21,14 +21,14 @@ function main() {
   let planeMaterial = new THREE.MeshLambertMaterial({color: 0xf59725, wireframe: false, side: THREE.DoubleSide});
   let plane = new THREE.Mesh(planeGeometry, planeMaterial);
 
-  // Placing in scene
+  // Placing Objects in scene
   plane.position.set(0, 0, 0);
   plane.rotateX(THREE.MathUtils.degToRad(-90));
   plane.receiveShadow = true;
   window.scene.add(plane);
 
   let printer = new Printer();
-  printer.position.set(0, 1, 0);
+  printer.position.set(0, 3, 0);
   window.scene.add(printer);
 
   // Lighting

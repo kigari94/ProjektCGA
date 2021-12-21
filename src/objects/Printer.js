@@ -14,6 +14,12 @@ export default class Printer extends THREE.Group {
 
   addParts() {
     // Materials
+    const testMaterial = new THREE.MeshPhongMaterial({
+      color: 0xdd0af0,
+      flatShading: true,
+      side: THREE.DoubleSide
+    });
+
     const corpusMaterial = new THREE.MeshPhongMaterial({
       color: 0x373837,
       flatShading: true,
@@ -27,9 +33,15 @@ export default class Printer extends THREE.Group {
       bumpScale: 1.0
     });
 
+    const screwMaterial = new THREE.MeshPhongMaterial({
+      color: 0x373837,
+      flatShading: true,
+      bumpMap: new THREE.TextureLoader().load('src/images/screwBump.png'),
+      bumpScale: 1.0
+    });
+
     const frontFrameTopMaterial = new THREE.MeshPhongMaterial({
       color: 0x373837,
-
       bumpMap: new THREE.TextureLoader().load('src/images/frontFrameTop.png'),
       bumpScale: 1.0
     });
@@ -40,6 +52,20 @@ export default class Printer extends THREE.Group {
       bumpMap: new THREE.TextureLoader().load('src/images/frontFrameSide.png'),
       bumpScale: 0.5
     });
+
+    const railMaterial = new THREE.MeshPhongMaterial({
+      color: 0x373837,
+      flatShading: true,
+      bumpMap: new THREE.TextureLoader().load('src/images/rail.png'),
+      bumpScale: 0.5
+    })
+
+    const printheadMaterial = new THREE.MeshPhongMaterial({
+      color: 0x373837,
+      flatShading: true,
+      bumpMap: new THREE.TextureLoader().load('src/images/ventSmall.png'),
+      bumpScale: 0.5
+    })
 
     const plateMaterial = new THREE.MeshPhongMaterial({
       color: 0xe7e7e7,
@@ -65,6 +91,7 @@ export default class Printer extends THREE.Group {
 
     const ballMaterial = new THREE.MeshPhongMaterial({
       color: 0xffaa00,
+      side: THREE.DoubleSide,
       flatShading: true
     })
 
@@ -72,27 +99,41 @@ export default class Printer extends THREE.Group {
     const positionsCorpus = [
       -20, 0, -20,          // 0
       -20, 0, 25,           // 1
-      20, 0, 25,            // 2
-      20, 0, -20,           // 3
-      -20, 10, -20,        // 4
-      -20, 10, 15,           // 5
-      20, 10, 15,           // 6
-      20, 10, -20,           // 7
+      20, 0, 25,           // 2
+      20, 0, -20,          // 3
+
+      -20, 3, -20,          // 4
+      -20, 3, 25,           // 5
+      20, 3, 25,           // 6
+      20, 3, -20,          // 7
+
+      -20, 10, -20,        // 8
+      -20, 10, 15,         // 9
+      20, 10, 15,         // 10
+      20, 10, -20,        // 11
     ];
 
     const indicesCorpus = [
-      0, 1, 2,    // body front 1/2
-      0, 2, 3,    // body front 2/2
-      1, 5, 6,    // body left 1/2
-      1, 6, 2,    // body left 2/2
-      4, 0, 3,    // body right 1/2
-      4, 3, 7,    // body right 2/2
-      4, 5, 1,    // body top 1/2
-      4, 1, 0,    // body top 2/2
-      3, 2, 6,    // body bottom 1/2
-      3, 6, 7,    // body bottom 2/2
-      5, 4, 7,    // body back 1/2
-      5, 7, 6,    // body back 2/2
+      0, 1, 2,
+      0, 2, 3,
+      1, 5, 6,
+      1, 6, 2,
+      4, 0, 3,
+      4, 3, 7,
+      4, 5, 1,
+      4, 1, 0,
+      3, 2, 6,
+      3, 6, 7,
+      4, 5, 8,
+      5, 9, 8,
+      5, 6, 9,
+      9, 6, 10,
+      6, 7, 10,
+      10, 7, 11,
+      11, 7, 4,
+      4, 8, 11,
+      8, 9, 11,
+      9, 10, 11
     ];
 
     const positionsFrame = [
@@ -128,18 +169,18 @@ export default class Printer extends THREE.Group {
     ];
 
     const indicesFrame = [
-      0, 1, 2,    // body front 1/2
-      0, 2, 3,    // body front 2/2
-      1, 5, 6,    // body left 1/2
-      1, 6, 2,    // body left 2/2
-      4, 0, 3,    // body right 1/2
-      4, 3, 7,    // body right 2/2
-      4, 5, 1,    // body top 1/2
-      4, 1, 0,    // body top 2/2
-      3, 2, 6,    // body bottom 1/2
-      3, 6, 7,    // body bottom 2/2
-      5, 4, 7,    // body back 1/2
-      5, 7, 6,    // body back 2/2
+      0, 1, 2,
+      0, 2, 3,
+      1, 5, 6,
+      1, 6, 2,
+      4, 0, 3,
+      4, 3, 7,
+      4, 5, 1,
+      4, 1, 0,
+      3, 2, 6,
+      3, 6, 7,
+      5, 4, 7,
+      5, 7, 6,
       4, 8, 9,
       9, 5, 4,
       9, 5, 6,
@@ -179,12 +220,12 @@ export default class Printer extends THREE.Group {
     const positionsSocket = [
       -5, 10, -20,          // 0
       -5, 10, 15,           // 1
-       5, 10, 15,           // 2
-       5, 10, -20,          // 3
+      5, 10, 15,           // 2
+      5, 10, -20,          // 3
       -5, 13, -20,          // 4
       -5, 13, 15,           // 5
-       5, 13, 15,           // 6
-       5, 13, -20,          // 7
+      5, 13, 15,           // 6
+      5, 13, -20,          // 7
     ];
 
     const indicesSocket = [
@@ -205,18 +246,18 @@ export default class Printer extends THREE.Group {
     const positionsPrinthead = [
       -2, 15, -2,          // 0
       -2, 15, 1,           // 1
-       2, 15, 1,           // 2
-       2, 15, -2,          // 3
+      2, 15, 1,           // 2
+      2, 15, -2,          // 3
 
       -2, 17, -2,          // 4
       -2, 17, 2,           // 5
-       2, 17, 2,           // 6
-       2, 17, -2,          // 7
+      2, 17, 2,           // 6
+      2, 17, -2,          // 7
 
       -2, 21, -2,          // 8
       -2, 21, 2,           // 9
-       2, 21, 2,           // 10
-       2, 21, -2,          // 11
+      2, 21, 2,           // 10
+      2, 21, -2,          // 11
     ];
 
     const indicesPrinthead = [
@@ -233,13 +274,13 @@ export default class Printer extends THREE.Group {
       6, 5, 9,
       6, 9, 10,
       7, 6, 10,
-      7,10, 11,
+      7, 10, 11,
       4, 5, 8,
       5, 8, 9,
       4, 7, 8,
-      7, 8,11,
-      8, 9,11,
-      9,10,11,
+      7, 8, 11,
+      8, 9, 11,
+      9, 10, 11,
     ];
 
     // Corpus
@@ -251,11 +292,30 @@ export default class Printer extends THREE.Group {
     corpus.castShadow = true;
     this.add(corpus);
 
+    // Screw Texture
+    const screwGeometry = new THREE.PlaneGeometry(1, 1);
+    const screwLeftFront = new THREE.Mesh(screwGeometry, screwMaterial);
+    screwLeftFront.position.set(-15, 10.1, 12);
+    screwLeftFront.rotateX(THREE.MathUtils.degToRad(-90));
+    corpus.add(screwLeftFront);
+
+    const screwRightFront = screwLeftFront.clone();
+    screwRightFront.position.set(15, 10.1, 12);
+    corpus.add(screwRightFront);
+
+    const screwLeftBack = screwLeftFront.clone();
+    screwLeftBack.position.set(-15, 10.1, -12);
+    corpus.add(screwLeftBack);
+
+    const screwRightBack = screwLeftFront.clone();
+    screwRightBack.position.set(15, 10.1, -12);
+    corpus.add(screwRightBack);
+
     // Front Corpus Texture
-    const frontCorpusGeometry = new THREE.PlaneGeometry(40, 14);
+    const frontCorpusGeometry = new THREE.PlaneGeometry(40, 12.2);
     const frontCorpus = new THREE.Mesh(frontCorpusGeometry, corpusMaterial);
-    frontCorpus.position.set(0, 5, 20);
-    frontCorpus.rotateX(THREE.MathUtils.degToRad(-45));
+    frontCorpus.position.set(0, 6.5, 20);
+    frontCorpus.rotateX(THREE.MathUtils.degToRad(-55));
     this.add(frontCorpus);
 
     // Frame
@@ -296,7 +356,7 @@ export default class Printer extends THREE.Group {
     this.add(socket);
 
     // Plate
-    const plateGeometry = new THREE.BoxGeometry(25,1,25);
+    const plateGeometry = new THREE.BoxGeometry(25, 1, 25);
     const plate = new THREE.Mesh(plateGeometry, plateMaterial);
     plate.position.set(0, 13.5, 0);
     plate.castShadow = true;
@@ -312,7 +372,7 @@ export default class Printer extends THREE.Group {
     let plateBackwardTween = new TWEEN.Tween(plate.position).to(new THREE.Vector3(
         plate.position.x,
         plate.position.y,
-        plate.position.z -10), 265)
+        plate.position.z - 10), 265)
         .easing(TWEEN.Easing.Linear.None)
 
     let plateOriginTween = new TWEEN.Tween(plate.position).to(new THREE.Vector3(
@@ -326,19 +386,25 @@ export default class Printer extends THREE.Group {
     plateBackwardTween.chain(plateOriginTween);
 
     // Rail
-    const railGeometry = new THREE.BoxGeometry(30,5,0.5);
+    const railGeometry = new THREE.BoxGeometry(30, 5, 0.5);
     const rail = new THREE.Mesh(railGeometry, corpusMaterial);
     rail.position.set(0, 18, -2.5);
     rail.castShadow = true;
     this.add(rail);
 
+    // Rail Texture
+    const railTextureGeometry = new THREE.PlaneGeometry(30, 5);
+    const railTexture = new THREE.Mesh(railTextureGeometry, railMaterial);
+    railTexture.position.set(0, 0, 0.3);
+    rail.add(railTexture);
+
     // Rail Animation
     let railUpTween = new TWEEN.Tween(rail.position).to(new THREE.Vector3(
         rail.position.x,
         rail.position.y + 35,
-        rail.position.z), 2000)
+        rail.position.z), 4000)
         .easing(TWEEN.Easing.Linear.None)
-        .onComplete(function(){
+        .onComplete(function () {
           plateForwardTween.stop();
         })
 
@@ -351,7 +417,7 @@ export default class Printer extends THREE.Group {
     // railUpTween.chain(railDownTween);
 
     // Left Bracket
-    const leftBracketGeometry = new THREE.BoxGeometry(5,5,2);
+    const leftBracketGeometry = new THREE.BoxGeometry(5, 5, 2);
     const leftBracket = new THREE.Mesh(leftBracketGeometry, corpusMaterial);
     leftBracket.position.set(-17.5, 0, 0);
     leftBracket.castShadow = true;
@@ -374,15 +440,21 @@ export default class Printer extends THREE.Group {
     printhead.name = 'printhead';
     rail.add(printhead);
 
+    // Printhead Texture
+    const printheadVentGeometry = new THREE.PlaneGeometry(4, 4);
+    const printheadVent = new THREE.Mesh(printheadVentGeometry, printheadMaterial);
+    printheadVent.position.set(0,19,2.025);
+    printhead.add(printheadVent);
+
     // Printhead Animations
-   let printheadRightTween = new TWEEN.Tween(printhead.position).to(new THREE.Vector3(
+    let printheadRightTween = new TWEEN.Tween(printhead.position).to(new THREE.Vector3(
         printhead.position.x + 25,
         printhead.position.y,
         printhead.position.z), 250)
         .easing(TWEEN.Easing.Linear.None)
-        .onRepeat(function(){
-         printheadLeftTween.start();
-       })
+        .onRepeat(function () {
+          printheadLeftTween.start();
+        })
 
     let printheadLeftTween = new TWEEN.Tween(printhead.position).to(new THREE.Vector3(
         printhead.position.x,
@@ -410,15 +482,15 @@ export default class Printer extends THREE.Group {
     // Unhide Animation
     let cubeUpTween = new TWEEN.Tween(cube.position).to(new THREE.Vector3(
         cube.position.x,
-        cube.position.y + 35,
-        cube.position.z), 2000)
+        cube.position.y + 70,
+        cube.position.z), 8000)
         .easing(TWEEN.Easing.Linear.None)
 
     // Buttons
-    const startButtonGeometry = new THREE.BoxGeometry(5,5,1);
+    const startButtonGeometry = new THREE.BoxGeometry(5, 5, 1);
     const startButton = new THREE.Mesh(startButtonGeometry, startButtonMaterial);
-    startButton.position.set(5, 5, 20);
-    startButton.rotateX(THREE.MathUtils.degToRad(-45));
+    startButton.position.set(5, 7, 20);
+    startButton.rotateX(THREE.MathUtils.degToRad(-54));
     startButton.castShadow = true;
     startButton.name = 'startButton';
     startButton.userData = {
@@ -429,10 +501,10 @@ export default class Printer extends THREE.Group {
     }
     this.add(startButton);
 
-    const stopButtonGeometry = new THREE.BoxGeometry(5,5,1);
+    const stopButtonGeometry = new THREE.BoxGeometry(5, 5, 1);
     const stopButton = new THREE.Mesh(stopButtonGeometry, stopButtonMaterial);
-    stopButton.position.set(15, 5, 20);
-    stopButton.rotateX(THREE.MathUtils.degToRad(-45));
+    stopButton.position.set(15, 7, 20);
+    stopButton.rotateX(THREE.MathUtils.degToRad(-54));
     stopButton.castShadow = true;
     stopButton.name = 'stopButton';
     stopButton.userData = {
@@ -441,5 +513,24 @@ export default class Printer extends THREE.Group {
       plateForwardTween
     }
     this.add(stopButton);
+
+    // Foots
+    const footGeometry = new THREE.CylinderGeometry(1, 0.8, 2, 8, 1);
+    const footFrontRight = new THREE.Mesh(footGeometry, corpusMaterial);
+    footFrontRight.position.set(18,-1,22);
+    footFrontRight.castShadow = true;
+    corpus.add(footFrontRight);
+
+    const footFrontLeft = footFrontRight.clone();
+    footFrontLeft.position.set(-18, -1, 22);
+    corpus.add(footFrontLeft);
+
+    const footBackRight = footFrontRight.clone();
+    footBackRight.position.set(18, -1, -19);
+    corpus.add(footBackRight);
+
+    const footBackLeft = footFrontRight.clone();
+    footBackLeft.position.set(-18, -1, -19);
+    corpus.add(footBackLeft);
   }
 }
