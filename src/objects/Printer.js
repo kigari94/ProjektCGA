@@ -393,26 +393,50 @@ export default class Printer extends THREE.Group {
     printheadRightTween.chain(printheadLeftTween);
 
     // Printing Object
-    const ballGeometry = new THREE.SphereGeometry(10, 10, 10);
-    const ball = new THREE.Mesh(ballGeometry, ballMaterial);
-    ball.position.set(0, 10.5, 0);
-    ball.castShadow = true;
-    ball.renderOrder = 1;
-    plate.add(ball);
+    // const ballGeometry = new THREE.SphereGeometry(10, 10, 10);
+    // const ball = new THREE.Mesh(ballGeometry, ballMaterial);
+    // ball.position.set(0, 10.5, 0);
+    // ball.castShadow = true;
+    // ball.renderOrder = 1;
+    // plate.add(ball);
 
     // Hiding Cube
-    const cubeGeometry = new THREE.BoxGeometry(20, 20, 20);
-    const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-    cube.position.set(0, 10.5, 0);
-    cube.renderOrder = 0;
-    plate.add(cube);
+    // const cubeGeometry = new THREE.BoxGeometry(20, 20, 20);
+    // const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    // cube.position.set(0, 10.5, 0);
+    // cube.renderOrder = 0;
+    // plate.add(cube);
+
+    let csgY = 20;
+
+    const myCSG = CSG.intersect([
+      new THREE.BoxGeometry(20, 20, 20),
+      new THREE.SphereGeometry(10, 10, 10).translate(0,csgY,0),
+
+    ]);
+
+    const geometry = CSG.BufferGeometry(myCSG);
+    const printingObject = new THREE.Mesh(geometry, ballMaterial);
+    printingObject.position.set(0, -9.5, 0);
+    plate.add(printingObject);
+
+    // Print Animation
+    let printTween = new TWEEN.Tween(printingObject.position).to(new THREE.Vector3(
+        printingObject.position.x,
+        printingObject.position.y + 1,
+        printingObject.position.z), 2000)
+        .easing(TWEEN.Easing.Linear.None)
+        .onUpdate(function(csgY){
+          csgY = csgY - 1;
+          return csgY;
+        })
 
     // Unhide Animation
-    let cubeUpTween = new TWEEN.Tween(cube.position).to(new THREE.Vector3(
-        cube.position.x,
-        cube.position.y + 35,
-        cube.position.z), 2000)
-        .easing(TWEEN.Easing.Linear.None)
+    // let cubeUpTween = new TWEEN.Tween(cube.position).to(new THREE.Vector3(
+    //     cube.position.x,
+    //     cube.position.y + 35,
+    //     cube.position.z), 2000)
+    //     .easing(TWEEN.Easing.Linear.None)
 
     // Buttons
     const startButtonGeometry = new THREE.BoxGeometry(5,5,1);
@@ -425,7 +449,8 @@ export default class Printer extends THREE.Group {
       printheadRightTween,
       railUpTween,
       plateForwardTween,
-      cubeUpTween
+      printTween
+      // cubeUpTween
     }
     this.add(startButton);
 

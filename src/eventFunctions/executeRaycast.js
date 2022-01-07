@@ -16,7 +16,8 @@ export function executeRaycast() {
       firstHit.userData.printheadRightTween.start();
       firstHit.userData.railUpTween.start();
       firstHit.userData.plateForwardTween.start();
-      firstHit.userData.cubeUpTween.start();
+      // firstHit.userData.printTween.start();
+      // firstHit.userData.cubeUpTween.start();
 
       firstHit.userData.printheadRightTween.repeat(6);
       // firstHit.userData.plateForwardTween.repeat(10);
