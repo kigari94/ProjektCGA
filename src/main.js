@@ -6,6 +6,18 @@ import * as TWEEN from '../../../lib/tween.js-18.6.4/dist/tween.esm.js';
 
 // Own modules
 import Printer from './objects/Printer.js';
+import roomFromFile from '../src/objects/roomFromFile.js';
+import ArmChairFromFile from './objects/ArmChairFromFile.js';
+import DeskFromFile from './objects/DeskFromFile.js';
+import MonitorFromFile from './objects/MonitorFromFile.js';
+import KeyboardFromFile from './objects/KeyboardFromFile.js';
+import MouseFromFile from './objects/MouseFromFile.js';
+import PhoneFromFile from './objects/PhoneFromFile.js';
+import CupFromFile from './objects/CupFromFile.js';
+import ChairFromFile from './objects/ChairFromFile.js';
+
+// Physics
+// import Physics from './physics/Physics.js';
 
 // Event functions
 import {updateAspectRatio} from './eventFunctions/updateAspectRatio.js';
@@ -13,27 +25,100 @@ import {calculateMousePosition} from './eventfunctions/calculateMousePosition.js
 import {executeRaycast} from './eventfunctions/executeRaycast.js';
 
 function main() {
+  // Scene
   window.scene = new THREE.Scene();
   window.scene.add(new THREE.AxesHelper(50));
 
+  // Camera
+  window.camera = new THREE.PerspectiveCamera(
+      45,
+      window.innerWidth /
+      window.innerHeight,
+      0.1,
+      2000
+  );
+  window.camera.position.set(-100, 100, 100);
+  // window.camera.lookAt(0, 0, 0);
+  // window.scene.add(new THREE.CameraHelper(window.camera));
+
+  // Renderer
+  window.renderer = new THREE.WebGLRenderer({antialias: true});
+  window.renderer.setSize(window.innerWidth, window.innerHeight);
+  window.renderer.setClearColor(0xffffff);
+  window.renderer.shadowMap.enabled = true;
+
+  // Physics
+  // window.physics = new Physics(true);
+  // window.physics.setup(0, -200, 0, 1 / 240, true);
+
   // Meshes
-  let planeGeometry = new THREE.PlaneGeometry(200, 200);
+  let planeGeometry = new THREE.PlaneGeometry(1500, 1000);
   let planeMaterial = new THREE.MeshLambertMaterial({color: 0xf59725, wireframe: false, side: THREE.DoubleSide});
   let plane = new THREE.Mesh(planeGeometry, planeMaterial);
 
-  // Placing Objects in scene
+  // Objects in scene
+  // Floor
   plane.position.set(0, 0, 0);
   plane.rotateX(THREE.MathUtils.degToRad(-90));
   plane.receiveShadow = true;
   window.scene.add(plane);
 
+  // Room
+  // const roomFromFile = new roomFromFile();
+  // roomFromFile.position.set(0, 0, 0);
+  // window.scene.add(roomFromFile);
+
+  // Printer
   let printer = new Printer();
-  printer.position.set(0, 3, 0);
+  printer.position.set(50, 70, -300);
   window.scene.add(printer);
+
+  // Desk
+  const deskFromFile = new DeskFromFile();
+  deskFromFile.position.set(0, 0, -400);
+  window.scene.add(deskFromFile);
+
+  // Chair
+  const chairFromFile = new ChairFromFile();
+  chairFromFile.position.set(-10, 0, -340);
+  chairFromFile.rotateY(THREE.MathUtils.degToRad(-195));
+  window.scene.add(chairFromFile);
+
+  // Monitor
+  const monitorFromFile = new MonitorFromFile();
+  monitorFromFile.position.set(40, 70, -410);
+  monitorFromFile.rotateY(THREE.MathUtils.degToRad(-40));
+  window.scene.add(monitorFromFile);
+
+  // Keyboard
+  const keyboardFromFile = new KeyboardFromFile();
+  keyboardFromFile.position.set(0, 70, -380);
+  window.scene.add(keyboardFromFile);
+
+  // Mouse
+  const mouseFromFile = new MouseFromFile();
+  mouseFromFile.position.set(40, 70, -370);
+  mouseFromFile.rotateY(THREE.MathUtils.degToRad(-30));
+  window.scene.add(mouseFromFile);
+
+  // Phone
+  const phoneFromFile = new PhoneFromFile();
+  phoneFromFile.position.set(0, 0, 0);
+  // window.scene.add(phoneFromFile);
+
+  // Cup
+  const cupFromFile = new CupFromFile();
+  cupFromFile.position.set(0, 0, 0);
+  // window.scene.add(cupFromFile);
+
+  // ArmChair
+  const armChairFromFile = new ArmChairFromFile();
+  armChairFromFile.position.set(0, 0, 0);
+  // window.scene.add(armChairFromFile);
 
   // Lighting
   const ambientLight = new THREE.AmbientLight(0xffffff);
-  ambientLight.intensity = 0.5;
+  // ambientLight.intensity = 0.5;
   window.scene.add(ambientLight);
 
   let spotLight = new THREE.SpotLight(0xffffff);
@@ -56,24 +141,6 @@ function main() {
   gui.add(spotLight.position, 'x', 0, 200).step(5);
   gui.add(spotLight.position, 'y', 0, 200).step(5);
   gui.add(spotLight.position, 'z', 0, 200).step(5);
-
-  // Camera
-  window.camera = new THREE.PerspectiveCamera(
-      45,
-      window.innerWidth /
-      window.innerHeight,
-      0.1,
-      1000
-  );
-  window.camera.position.set(-100, 100, 100);
-  // window.camera.lookAt(0, 0, 0);
-  // window.scene.add(new THREE.CameraHelper(window.camera));
-
-  // Renderer
-  window.renderer = new THREE.WebGLRenderer({antialias: true});
-  window.renderer.setSize(window.innerWidth, window.innerHeight);
-  window.renderer.setClearColor(0xffffff);
-  window.renderer.shadowMap.enabled = true;
 
   // Orbit controls
   let orbitControls = new CONTROLS.OrbitControls(window.camera, window.renderer.domElement);
