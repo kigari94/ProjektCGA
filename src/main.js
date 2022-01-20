@@ -6,7 +6,7 @@ import * as TWEEN from '../../../lib/tween.js-18.6.4/dist/tween.esm.js';
 
 // Own modules
 import Printer from './objects/Printer.js';
-import roomFromFile from '../src/objects/roomFromFile.js';
+import RoomFromFile from '../src/objects/roomFromFile.js';
 import ArmChairFromFile from './objects/ArmChairFromFile.js';
 import DeskFromFile from './objects/DeskFromFile.js';
 import MonitorFromFile from './objects/MonitorFromFile.js';
@@ -52,59 +52,70 @@ function main() {
   // window.physics.setup(0, -200, 0, 1 / 240, true);
 
   // Meshes
-  let planeGeometry = new THREE.PlaneGeometry(1500, 1000);
-  let planeMaterial = new THREE.MeshLambertMaterial({color: 0xf59725, wireframe: false, side: THREE.DoubleSide});
-  let plane = new THREE.Mesh(planeGeometry, planeMaterial);
+  // let planeGeometry = new THREE.PlaneGeometry(1500, 1000);
+  // let planeMaterial = new THREE.MeshLambertMaterial({color: 0xf59725, wireframe: false, side: THREE.DoubleSide});
+  // let plane = new THREE.Mesh(planeGeometry, planeMaterial);
 
   // Objects in scene
   // Floor
-  plane.position.set(0, 0, 0);
-  plane.rotateX(THREE.MathUtils.degToRad(-90));
-  plane.receiveShadow = true;
-  window.scene.add(plane);
+  // plane.position.set(0, 0, 0);
+  // plane.rotateX(THREE.MathUtils.degToRad(-90));
+  // plane.receiveShadow = true;
+  // window.scene.add(plane);
 
   // Room
-  // const roomFromFile = new roomFromFile();
-  // roomFromFile.position.set(0, 0, 0);
-  // window.scene.add(roomFromFile);
+  const roomFromFile = new RoomFromFile();
+  roomFromFile.position.set(0, 0, 0);
+  window.scene.add(roomFromFile);
 
   // Printer
   let printer = new Printer();
-  printer.position.set(50, 70, -300);
+  printer.position.set(-50, 70, -150);
   window.scene.add(printer);
 
   // Desk
-  const deskFromFile = new DeskFromFile();
-  deskFromFile.position.set(0, 0, -400);
-  window.scene.add(deskFromFile);
+  const deskFromFileLeft = new DeskFromFile();
+  deskFromFileLeft.position.set(-100, 0, -250);
+  window.scene.add(deskFromFileLeft);
+
+  // const deskFromFileRight = new DeskFromFile();
+  // deskFromFileRight.position.set(100, 0, -250);
+  // window.scene.add(deskFromFileRight);
 
   // Chair
-  const chairFromFile = new ChairFromFile();
-  chairFromFile.position.set(-10, 0, -340);
-  chairFromFile.rotateY(THREE.MathUtils.degToRad(-195));
-  window.scene.add(chairFromFile);
+  const chairFromFileLeft = new ChairFromFile();
+  chairFromFileLeft.position.set(-90, 0, -190);
+  chairFromFileLeft.rotateY(THREE.MathUtils.degToRad(-70));
+  window.scene.add(chairFromFileLeft);
+
+  // const chairFromFileRight = new ChairFromFile();
+  // chairFromFileRight.position.set(90, 0, -190);
+  // chairFromFileRight.rotateY(THREE.MathUtils.degToRad(70));
+  // window.scene.add(chairFromFileRight);
 
   // Monitor
   const monitorFromFile = new MonitorFromFile();
-  monitorFromFile.position.set(40, 70, -410);
+  monitorFromFile.position.set(-50, 70, -250);
   monitorFromFile.rotateY(THREE.MathUtils.degToRad(-40));
   window.scene.add(monitorFromFile);
 
   // Keyboard
   const keyboardFromFile = new KeyboardFromFile();
-  keyboardFromFile.position.set(0, 70, -380);
+  keyboardFromFile.position.set(-65, 70, -225);
+  keyboardFromFile.rotateY(THREE.MathUtils.degToRad(-35))
   window.scene.add(keyboardFromFile);
 
   // Mouse
   const mouseFromFile = new MouseFromFile();
-  mouseFromFile.position.set(40, 70, -370);
-  mouseFromFile.rotateY(THREE.MathUtils.degToRad(-30));
+  mouseFromFile.position.set(-50, 70, -210);
+  mouseFromFile.rotateY(THREE.MathUtils.degToRad(-45));
   window.scene.add(mouseFromFile);
 
   // Phone
   const phoneFromFile = new PhoneFromFile();
-  phoneFromFile.position.set(0, 0, 0);
-  // window.scene.add(phoneFromFile);
+  phoneFromFile.position.set(-130, 70, -250);
+  phoneFromFile.rotateY(THREE.MathUtils.degToRad(40))
+  window.scene.add(phoneFromFile);
 
   // Cup
   const cupFromFile = new CupFromFile();
@@ -124,7 +135,7 @@ function main() {
   let spotLight = new THREE.SpotLight(0xffffff);
   spotLight.position.set(100, 100, 100);
   spotLight.intensity = 0.5;
-  spotLight.target = plane;
+  // spotLight.target = plane;
   spotLight.angle = THREE.MathUtils.degToRad((30));
   spotLight.penumbra = 1;
   spotLight.castShadow = true;

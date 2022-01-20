@@ -12,7 +12,7 @@ export default class RoomFromFile extends THREE.Group {
 
   load(thisRoom) {
 
-    this.gltfLoader.load('src/models/officeRework.glb', function (gltf) {
+    this.gltfLoader.load('src/models/room01.gltf', function (gltf) {
 
       gltf.scene.traverse(function (child) {
 

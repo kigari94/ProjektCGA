@@ -11,7 +11,7 @@ export default class ChairFromFile extends THREE.Group {
 
   load(thisChair) {
 
-    this.gltfLoader.load('src/models/officeChair.gltf', function (gltf) {
+    this.gltfLoader.load('src/models/officeChair02.gltf', function (gltf) {
 
       gltf.scene.traverse(function (child) {
 
