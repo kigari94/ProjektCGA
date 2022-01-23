@@ -75,7 +75,7 @@ export default class Printer extends THREE.Group {
     });
 
     const startButtonMaterial = new THREE.MeshPhongMaterial({
-      color: 0x198003,
+      color: 0xfca503,
       flatShading: true
     });
 
@@ -312,9 +312,9 @@ export default class Printer extends THREE.Group {
     corpus.add(screwRightBack);
 
     // Front Corpus Texture
-    const frontCorpusGeometry = new THREE.PlaneGeometry(40, 12.2);
-    const frontCorpus = new THREE.Mesh(frontCorpusGeometry, corpusMaterial);
-    frontCorpus.position.set(0, 6.5, 20);
+    const frontCorpusGeometry = new THREE.PlaneGeometry(18, 10);
+    const frontCorpus = new THREE.Mesh(frontCorpusGeometry, frontCorpusMaterial);
+    frontCorpus.position.set(10, 6.5, 20.05);
     frontCorpus.rotateX(THREE.MathUtils.degToRad(-55));
     this.add(frontCorpus);
 
@@ -487,9 +487,9 @@ export default class Printer extends THREE.Group {
     //     .easing(TWEEN.Easing.Linear.None)
 
     // Buttons
-    const startButtonGeometry = new THREE.BoxGeometry(5, 5, 1);
+    const startButtonGeometry = new THREE.BoxGeometry(4, 4, 1);
     const startButton = new THREE.Mesh(startButtonGeometry, startButtonMaterial);
-    startButton.position.set(5, 7, 20);
+    startButton.position.set(6, 5.5, 21);
     startButton.rotateX(THREE.MathUtils.degToRad(-54));
     startButton.castShadow = true;
     startButton.name = 'startButton';
@@ -501,9 +501,9 @@ export default class Printer extends THREE.Group {
     }
     this.add(startButton);
 
-    const stopButtonGeometry = new THREE.BoxGeometry(5, 5, 1);
+    const stopButtonGeometry = new THREE.BoxGeometry(4, 4, 1);
     const stopButton = new THREE.Mesh(stopButtonGeometry, stopButtonMaterial);
-    stopButton.position.set(15, 7, 20);
+    stopButton.position.set(14, 5.5, 21);
     stopButton.rotateX(THREE.MathUtils.degToRad(-54));
     stopButton.castShadow = true;
     stopButton.name = 'stopButton';

@@ -8,7 +8,8 @@ import * as TWEEN from '../../../lib/tween.js-18.6.4/dist/tween.esm.js';
 import Printer from './objects/Printer.js';
 import RoomFromFile from '../src/objects/roomFromFile.js';
 import ArmChairFromFile from './objects/ArmChairFromFile.js';
-import DeskFromFile from './objects/DeskFromFile.js';
+import DeskLeftFromFile from './objects/DeskLeftFromFile.js';
+import DeskRightFromFile from './objects/DeskRightFromFile.js';
 import MonitorFromFile from './objects/MonitorFromFile.js';
 import KeyboardFromFile from './objects/KeyboardFromFile.js';
 import MouseFromFile from './objects/MouseFromFile.js';
@@ -38,7 +39,7 @@ function main() {
       2000
   );
   window.camera.position.set(-100, 100, 100);
-  // window.camera.lookAt(0, 0, 0);
+  window.camera.lookAt(-50, 70, -150);
   // window.scene.add(new THREE.CameraHelper(window.camera));
 
   // Renderer
@@ -64,9 +65,9 @@ function main() {
   // window.scene.add(plane);
 
   // Room
-  const roomFromFile = new RoomFromFile();
-  roomFromFile.position.set(0, 0, 0);
-  window.scene.add(roomFromFile);
+  // const roomFromFile = new RoomFromFile();
+  // roomFromFile.position.set(0, 0, 0);
+  // window.scene.add(roomFromFile);
 
   // Printer
   let printer = new Printer();
@@ -74,19 +75,19 @@ function main() {
   window.scene.add(printer);
 
   // Desk
-  const deskFromFileLeft = new DeskFromFile();
-  deskFromFileLeft.position.set(-100, 0, -250);
-  window.scene.add(deskFromFileLeft);
+  const deskLeftFromFile = new DeskLeftFromFile();
+  deskLeftFromFile.position.set(-100, 0, -250);
+  window.scene.add(deskLeftFromFile);
 
-  // const deskFromFileRight = new DeskFromFile();
-  // deskFromFileRight.position.set(100, 0, -250);
-  // window.scene.add(deskFromFileRight);
+  const deskRightFromFile = new DeskRightFromFile();
+  deskRightFromFile.position.set(100, 0, -250);
+  window.scene.add(deskRightFromFile);
 
   // Chair
-  const chairFromFileLeft = new ChairFromFile();
-  chairFromFileLeft.position.set(-90, 0, -190);
-  chairFromFileLeft.rotateY(THREE.MathUtils.degToRad(-70));
-  window.scene.add(chairFromFileLeft);
+  // const chairFromFileLeft = new ChairFromFile();
+  // chairFromFileLeft.position.set(-90, 0, -190);
+  // chairFromFileLeft.rotateY(THREE.MathUtils.degToRad(-70));
+  // window.scene.add(chairFromFileLeft);
 
   // const chairFromFileRight = new ChairFromFile();
   // chairFromFileRight.position.set(90, 0, -190);
@@ -94,37 +95,37 @@ function main() {
   // window.scene.add(chairFromFileRight);
 
   // Monitor
-  const monitorFromFile = new MonitorFromFile();
-  monitorFromFile.position.set(-50, 70, -250);
-  monitorFromFile.rotateY(THREE.MathUtils.degToRad(-40));
-  window.scene.add(monitorFromFile);
+  // const monitorFromFile = new MonitorFromFile();
+  // monitorFromFile.position.set(-50, 70, -250);
+  // monitorFromFile.rotateY(THREE.MathUtils.degToRad(-40));
+  // window.scene.add(monitorFromFile);
 
   // Keyboard
-  const keyboardFromFile = new KeyboardFromFile();
-  keyboardFromFile.position.set(-65, 70, -225);
-  keyboardFromFile.rotateY(THREE.MathUtils.degToRad(-35))
-  window.scene.add(keyboardFromFile);
+  // const keyboardFromFile = new KeyboardFromFile();
+  // keyboardFromFile.position.set(-65, 70, -225);
+  // keyboardFromFile.rotateY(THREE.MathUtils.degToRad(-35))
+  // window.scene.add(keyboardFromFile);
 
   // Mouse
-  const mouseFromFile = new MouseFromFile();
-  mouseFromFile.position.set(-50, 70, -210);
-  mouseFromFile.rotateY(THREE.MathUtils.degToRad(-45));
-  window.scene.add(mouseFromFile);
+  // const mouseFromFile = new MouseFromFile();
+  // mouseFromFile.position.set(-50, 70, -210);
+  // mouseFromFile.rotateY(THREE.MathUtils.degToRad(-45));
+  // window.scene.add(mouseFromFile);
 
   // Phone
-  const phoneFromFile = new PhoneFromFile();
-  phoneFromFile.position.set(-130, 70, -250);
-  phoneFromFile.rotateY(THREE.MathUtils.degToRad(40))
-  window.scene.add(phoneFromFile);
+  // const phoneFromFile = new PhoneFromFile();
+  // phoneFromFile.position.set(-130, 70, -250);
+  // phoneFromFile.rotateY(THREE.MathUtils.degToRad(40))
+  // window.scene.add(phoneFromFile);
 
   // Cup
-  const cupFromFile = new CupFromFile();
-  cupFromFile.position.set(0, 0, 0);
+  // const cupFromFile = new CupFromFile();
+  // cupFromFile.position.set(0, 0, 0);
   // window.scene.add(cupFromFile);
 
   // ArmChair
-  const armChairFromFile = new ArmChairFromFile();
-  armChairFromFile.position.set(0, 0, 0);
+  // const armChairFromFile = new ArmChairFromFile();
+  // armChairFromFile.position.set(0, 0, 0);
   // window.scene.add(armChairFromFile);
 
   // Lighting

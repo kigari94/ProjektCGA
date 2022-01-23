@@ -1,7 +1,7 @@
 import * as THREE from '../../../../lib/three.js-r134/build/three.module.js';
 import {GLTFLoader} from '../../../../lib/three.js-r134/examples/jsm/loaders/GLTFLoader.js';
 
-export default class DeskFromFile extends THREE.Group {
+export default class DeskLeftFromFile extends THREE.Group {
 
   constructor() {
     super();
@@ -11,7 +11,7 @@ export default class DeskFromFile extends THREE.Group {
 
   load(thisDesk) {
 
-    this.gltfLoader.load('src/models/deskL.gltf', function (gltf) {
+    this.gltfLoader.load('src/models/deskLleft.gltf', function (gltf) {
 
       gltf.scene.traverse(function (child) {
 
