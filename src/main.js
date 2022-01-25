@@ -38,8 +38,8 @@ function main() {
       0.1,
       2000
   );
-  window.camera.position.set(-100, 100, 100);
-  window.camera.lookAt(-50, 70, -150);
+  window.camera.position.set(100, 100, 100);
+  window.camera.lookAt(0, 100, -150);
   // window.scene.add(new THREE.CameraHelper(window.camera));
 
   // Renderer
@@ -75,13 +75,13 @@ function main() {
   window.scene.add(printer);
 
   // Desk
-  const deskLeftFromFile = new DeskLeftFromFile();
-  deskLeftFromFile.position.set(-100, 0, -250);
-  window.scene.add(deskLeftFromFile);
-
-  const deskRightFromFile = new DeskRightFromFile();
-  deskRightFromFile.position.set(100, 0, -250);
-  window.scene.add(deskRightFromFile);
+  // const deskLeftFromFile = new DeskLeftFromFile();
+  // deskLeftFromFile.position.set(-100, 0, -250);
+  // window.scene.add(deskLeftFromFile);
+  //
+  // const deskRightFromFile = new DeskRightFromFile();
+  // deskRightFromFile.position.set(100, 0, -250);
+  // window.scene.add(deskRightFromFile);
 
   // Chair
   // const chairFromFileLeft = new ChairFromFile();

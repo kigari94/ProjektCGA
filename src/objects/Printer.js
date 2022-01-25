@@ -351,7 +351,7 @@ export default class Printer extends THREE.Group {
     socketGeometry.setIndex(indicesSocket
     );
     socketGeometry.computeVertexNormals();
-    const socket = new THREE.Mesh(socketGeometry, corpusMaterial);
+    const socket = new THREE.Mesh(socketGeometry, testMaterial);
     socket.castShadow = true;
     this.add(socket);
 
