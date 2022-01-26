@@ -7,6 +7,7 @@ import * as TWEEN from '../../../lib/tween.js-18.6.4/dist/tween.esm.js';
 // Own modules
 import Printer from './objects/Printer.js';
 import RoomFromFile from '../src/objects/roomFromFile.js';
+import PrinterFromFile from './objects/PrinterFromFile.js';
 import ArmChairFromFile from './objects/ArmChairFromFile.js';
 import DeskLeftFromFile from './objects/DeskLeftFromFile.js';
 import DeskRightFromFile from './objects/DeskRightFromFile.js';
@@ -73,6 +74,10 @@ function main() {
   let printer = new Printer();
   printer.position.set(-50, 70, -150);
   window.scene.add(printer);
+
+  const printerFromFile = new PrinterFromFile();
+  printerFromFile.position.set(0, 0, 0);
+  window.scene.add(printerFromFile);
 
   // Desk
   // const deskLeftFromFile = new DeskLeftFromFile();

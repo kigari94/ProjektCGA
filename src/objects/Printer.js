@@ -23,6 +23,7 @@ export default class Printer extends THREE.Group {
     const corpusMaterial = new THREE.MeshPhongMaterial({
       color: 0x373837,
       flatShading: true,
+      // metalness: 0.5,
       side: THREE.DoubleSide
     });
 
@@ -218,14 +219,14 @@ export default class Printer extends THREE.Group {
     ];
 
     const positionsSocket = [
-      -5, 10, -20,          // 0
-      -5, 10, 15,           // 1
-      5, 10, 15,           // 2
-      5, 10, -20,          // 3
-      -5, 13, -20,          // 4
-      -5, 13, 15,           // 5
-      5, 13, 15,           // 6
-      5, 13, -20,          // 7
+      -10, 10, -20,          // 0
+      -10, 10, 15,           // 1
+      10, 10, 15,           // 2
+      10, 10, -20,          // 3
+      -10, 13, -20,          // 4
+      -10, 13, 15,           // 5
+      10, 13, 15,           // 6
+      10, 13, -20,          // 7
     ];
 
     const indicesSocket = [
@@ -346,14 +347,33 @@ export default class Printer extends THREE.Group {
     this.add(frontFrameRight);
 
     // Socket
-    const socketGeometry = new THREE.BufferGeometry();
-    socketGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positionsSocket), 3));
-    socketGeometry.setIndex(indicesSocket
-    );
-    socketGeometry.computeVertexNormals();
-    const socket = new THREE.Mesh(socketGeometry, testMaterial);
+    const socketGeometry = new THREE.BoxGeometry(20, 1.5, 31);
+    const socket = new THREE.Mesh(socketGeometry, corpusMaterial);
+    socket.position.set(0, 10.5, -2);
     socket.castShadow = true;
     this.add(socket);
+
+    const socketFrontGeometry = new THREE.BoxGeometry(20, 3, 2);
+    const socketFront = new THREE.Mesh(socketFrontGeometry, corpusMaterial);
+    socketFront.position.set(0, 1, 15);
+    socketFront.castShadow = true;
+    socket.add(socketFront);
+
+    const socketBack = socketFront.clone();
+    socketBack.position.set(0, 1, -16.5);
+    socketBack.castShadow = true;
+    socket.add(socketBack);
+
+    const socketRailLeftGeometry = new THREE.BoxGeometry(4, 2, 30);
+    const socketRailLeft = new THREE.Mesh(socketRailLeftGeometry, corpusMaterial);
+    socketRailLeft.position.set(4, 1, -1);
+    socketRailLeft.castShadow = true;
+    socket.add(socketRailLeft);
+
+    const socketRailRight = socketRailLeft.clone();
+    socketRailRight.position.set(-4, 1, -1);
+    socketRailRight.castShadow = true;
+    socket.add(socketRailRight);
 
     // Plate
     const plateGeometry = new THREE.BoxGeometry(25, 1, 25);
@@ -486,6 +506,20 @@ export default class Printer extends THREE.Group {
     //     cube.position.z), 8000)
     //     .easing(TWEEN.Easing.Linear.None)
 
+    const cubeGeometry = new THREE.BoxGeometry(15,1,15);
+    const cube = new THREE.Mesh(cubeGeometry, ballMaterial);
+    cube.position.set(0, 1, 0);
+    cube.geometry.translate(0,1/2,0);
+    cube.castShadow = true;
+    cube.renderOrder = 1;
+    plate.add(cube);
+
+    let printTween = new TWEEN.Tween(cube.scale).to(new THREE.Vector3(
+        cube.scale.x,
+        cube.scale.y * 15,
+        cube.scale.z), 2000)
+        .easing(TWEEN.Easing.Linear.None)
+
     // Buttons
     const startButtonGeometry = new THREE.BoxGeometry(4, 4, 1);
     const startButton = new THREE.Mesh(startButtonGeometry, startButtonMaterial);
@@ -497,6 +531,7 @@ export default class Printer extends THREE.Group {
       printheadRightTween,
       railUpTween,
       plateForwardTween,
+      printTween
       // cubeUpTween
     }
     this.add(startButton);
