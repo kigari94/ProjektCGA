@@ -7,8 +7,9 @@ import * as TWEEN from '../../../lib/tween.js-18.6.4/dist/tween.esm.js';
 // Own modules
 import Printer from './objects/Printer.js';
 import RoomFromFile from '../src/objects/roomFromFile.js';
+import FrontWallFromFile from '../src/objects/FrontWallFromFile.js';
+import SideWallFromFile from '../src/objects/SideWallFromFile.js';
 import PrinterFromFile from './objects/PrinterFromFile.js';
-import ArmChairFromFile from './objects/ArmChairFromFile.js';
 import DeskLeftFromFile from './objects/DeskLeftFromFile.js';
 import DeskRightFromFile from './objects/DeskRightFromFile.js';
 import MonitorFromFile from './objects/MonitorFromFile.js';
@@ -61,17 +62,28 @@ function main() {
   // Connection to HTML Element
   document.getElementById('3d_content').appendChild(window.renderer.domElement);
 
-  // Meshes
-  // let planeGeometry = new THREE.PlaneGeometry(1500, 1000);
-  // let planeMaterial = new THREE.MeshLambertMaterial({color: 0xf59725, wireframe: false, side: THREE.DoubleSide});
-  // let plane = new THREE.Mesh(planeGeometry, planeMaterial);
-
   // Objects in scene
 
   // Room
   const roomFromFile = new RoomFromFile();
   roomFromFile.position.set(0, -1, 0);
   window.scene.add(roomFromFile);
+
+  const frontWallFromFile = new FrontWallFromFile();
+  frontWallFromFile.position.set(0, -1, -385);
+  frontWallFromFile.addPhysics();
+
+  const backWallFromFile = new FrontWallFromFile();
+  backWallFromFile.position.set(0, -1, 385);
+  backWallFromFile.addPhysics();
+
+  const sideWallRightFromFile = new SideWallFromFile();
+  sideWallRightFromFile.position.set(545, -1, 2);
+  sideWallRightFromFile.addPhysics();
+
+  const sideWallLeftFromFile = new SideWallFromFile();
+  sideWallLeftFromFile.position.set(-545, -1, 2);
+  sideWallLeftFromFile.addPhysics();
 
   // Printer
   let printer = new Printer();
@@ -83,6 +95,7 @@ function main() {
   const printerFromFile = new PrinterFromFile();
   printerFromFile.position.set(52, 70, -150);
   printerFromFile.rotation.set(0, THREE.MathUtils.degToRad(90), 0);
+  printerFromFile.addPhysics();
   window.scene.add(printerFromFile);
 
   // Desk
@@ -97,13 +110,15 @@ function main() {
 
   // Chair
   const chairFromFileLeft = new ChairFromFile();
-  chairFromFileLeft.position.set(-120, 0, -190);
+  chairFromFileLeft.position.set(-120, 45, -190);
   chairFromFileLeft.rotateY(THREE.MathUtils.degToRad(10));
+  chairFromFileLeft.addPhysics();
   window.scene.add(chairFromFileLeft);
 
   const chairFromFileRight = new ChairFromFile();
-  chairFromFileRight.position.set(120, 0, -190);
+  chairFromFileRight.position.set(120, 45, -190);
   chairFromFileRight.rotateY(THREE.MathUtils.degToRad(-10));
+  chairFromFileRight.addPhysics();
   window.scene.add(chairFromFileRight);
 
   // Monitor
@@ -133,22 +148,26 @@ function main() {
 
   // Keyboard
   const keyboardFromFileLeft = new KeyboardFromFile();
-  keyboardFromFileLeft.position.set(-115, 70, -240);
+  keyboardFromFileLeft.position.set(-123, 70, -240);
+  keyboardFromFileLeft.addPhysics();
   window.scene.add(keyboardFromFileLeft);
 
   const keyboardFromFileRight = new KeyboardFromFile();
-  keyboardFromFileRight.position.set(115, 70, -240);
+  keyboardFromFileRight.position.set(107, 70, -240);
+  keyboardFromFileRight.addPhysics();
   window.scene.add(keyboardFromFileRight);
 
   // Mouse
   const mouseFromFileLeft = new MouseFromFile();
   mouseFromFileLeft.position.set(-90, 70, -235);
   mouseFromFileLeft.rotateY(THREE.MathUtils.degToRad(-25));
+  mouseFromFileLeft.addPhysics();
   window.scene.add(mouseFromFileLeft);
 
   const mouseFromFileRight = new MouseFromFile();
   mouseFromFileRight.position.set(140, 70, -235);
   mouseFromFileRight.rotateY(THREE.MathUtils.degToRad(-25));
+  mouseFromFileRight.addPhysics();
   window.scene.add(mouseFromFileRight);
 
   // PC
@@ -191,11 +210,6 @@ function main() {
   trashbinFromFilRight.position.set(57, 18.5, -90);
   trashbinFromFilRight.addPhysics();
   window.scene.add(trashbinFromFilRight);
-
-  // ArmChair
-  // const armChairFromFile = new ArmChairFromFile();
-  // armChairFromFile.position.set(0, 0, 0);
-  // window.scene.add(armChairFromFile);
 
   // Lighting
   const ambientLight = new THREE.AmbientLight(0xffffff);

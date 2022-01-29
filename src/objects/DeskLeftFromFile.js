@@ -67,7 +67,7 @@ export default class DeskLeftFromFile extends THREE.Group {
 
       ];
 
-      window.physics.addConvexPolyhedron(this, 25, positions, indices, true);
+      window.physics.addConvexPolyhedron(this, 50, positions, indices, true);
     }
   }
 }
