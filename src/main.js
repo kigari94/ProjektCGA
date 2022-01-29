@@ -17,16 +17,21 @@ import MouseFromFile from './objects/MouseFromFile.js';
 import PhoneFromFile from './objects/PhoneFromFile.js';
 import CupFromFile from './objects/CupFromFile.js';
 import ChairFromFile from './objects/ChairFromFile.js';
+import PlantFromFile from './objects/PlantFromFile.js';
+import TrashbinFromFile from './objects/TrashbinFromFile.js';
+import PCFromFile from './objects/PCFromFile.js';
 
 // Physics
-// import Physics from './physics/Physics.js';
+import Physics from './physics/Physics.js';
 
 // Event functions
 import {updateAspectRatio} from './eventFunctions/updateAspectRatio.js';
 import {calculateMousePosition} from './eventfunctions/calculateMousePosition.js';
 import {executeRaycast} from './eventfunctions/executeRaycast.js';
+import {keyDownAction, keyUpAction} from './eventfunctions/executeKeyAction.js';
 
 function main() {
+
   // Scene
   window.scene = new THREE.Scene();
   window.scene.add(new THREE.AxesHelper(50));
@@ -50,8 +55,11 @@ function main() {
   window.renderer.shadowMap.enabled = true;
 
   // Physics
-  // window.physics = new Physics(true);
-  // window.physics.setup(0, -200, 0, 1 / 240, true);
+  window.physics = new Physics(true);
+  window.physics.setup(0, -200, 0, 1 / 240, true);
+
+  // Connection to HTML Element
+  document.getElementById('3d_content').appendChild(window.renderer.domElement);
 
   // Meshes
   // let planeGeometry = new THREE.PlaneGeometry(1500, 1000);
@@ -59,63 +67,100 @@ function main() {
   // let plane = new THREE.Mesh(planeGeometry, planeMaterial);
 
   // Objects in scene
-  // Floor
-  // plane.position.set(0, 0, 0);
-  // plane.rotateX(THREE.MathUtils.degToRad(-90));
-  // plane.receiveShadow = true;
-  // window.scene.add(plane);
 
   // Room
-  // const roomFromFile = new RoomFromFile();
-  // roomFromFile.position.set(0, 0, 0);
-  // window.scene.add(roomFromFile);
+  const roomFromFile = new RoomFromFile();
+  roomFromFile.position.set(0, -1, 0);
+  window.scene.add(roomFromFile);
 
   // Printer
   let printer = new Printer();
-  printer.position.set(-50, 70, -150);
+  printer.position.set(-45, 73, -150);
+  printer.rotation.set(0, THREE.MathUtils.degToRad(-90), 0);
+  printer.addPhysics();
   window.scene.add(printer);
 
   const printerFromFile = new PrinterFromFile();
-  printerFromFile.position.set(0, 0, 0);
+  printerFromFile.position.set(52, 70, -150);
+  printerFromFile.rotation.set(0, THREE.MathUtils.degToRad(90), 0);
   window.scene.add(printerFromFile);
 
   // Desk
-  // const deskLeftFromFile = new DeskLeftFromFile();
-  // deskLeftFromFile.position.set(-100, 0, -250);
-  // window.scene.add(deskLeftFromFile);
-  //
-  // const deskRightFromFile = new DeskRightFromFile();
-  // deskRightFromFile.position.set(100, 0, -250);
-  // window.scene.add(deskRightFromFile);
+  const deskLeftFromFile = new DeskLeftFromFile();
+  deskLeftFromFile.position.set(-30, 0, -250);
+  deskLeftFromFile.addPhysics();
+  window.scene.add(deskLeftFromFile);
+
+  const deskRightFromFile = new DeskRightFromFile();
+  deskRightFromFile.position.set(100, 0, -250);
+  window.scene.add(deskRightFromFile);
 
   // Chair
-  // const chairFromFileLeft = new ChairFromFile();
-  // chairFromFileLeft.position.set(-90, 0, -190);
-  // chairFromFileLeft.rotateY(THREE.MathUtils.degToRad(-70));
-  // window.scene.add(chairFromFileLeft);
+  const chairFromFileLeft = new ChairFromFile();
+  chairFromFileLeft.position.set(-120, 0, -190);
+  chairFromFileLeft.rotateY(THREE.MathUtils.degToRad(10));
+  window.scene.add(chairFromFileLeft);
 
-  // const chairFromFileRight = new ChairFromFile();
-  // chairFromFileRight.position.set(90, 0, -190);
-  // chairFromFileRight.rotateY(THREE.MathUtils.degToRad(70));
-  // window.scene.add(chairFromFileRight);
+  const chairFromFileRight = new ChairFromFile();
+  chairFromFileRight.position.set(120, 0, -190);
+  chairFromFileRight.rotateY(THREE.MathUtils.degToRad(-10));
+  window.scene.add(chairFromFileRight);
 
   // Monitor
-  // const monitorFromFile = new MonitorFromFile();
-  // monitorFromFile.position.set(-50, 70, -250);
-  // monitorFromFile.rotateY(THREE.MathUtils.degToRad(-40));
-  // window.scene.add(monitorFromFile);
+  const monitorFromFileLeftFirst = new MonitorFromFile();
+  monitorFromFileLeftFirst.position.set(-150, 91.55, -270);
+  monitorFromFileLeftFirst.rotateY(THREE.MathUtils.degToRad(10));
+  monitorFromFileLeftFirst.addPhysics();
+  window.scene.add(monitorFromFileLeftFirst);
+
+  const monitorFromFileLeftSecond = new MonitorFromFile();
+  monitorFromFileLeftSecond.position.set(-90, 91.55, -270);
+  monitorFromFileLeftSecond.rotateY(THREE.MathUtils.degToRad(-10));
+  monitorFromFileLeftSecond.addPhysics();
+  window.scene.add(monitorFromFileLeftSecond);
+
+  const monitorFromFileRightFirst = new MonitorFromFile();
+  monitorFromFileRightFirst.position.set(170, 91.55, -270);
+  monitorFromFileRightFirst.rotateY(THREE.MathUtils.degToRad(-10));
+  monitorFromFileRightFirst.addPhysics();
+  window.scene.add(monitorFromFileRightFirst);
+
+  const monitorFromFileRightSecond = new MonitorFromFile();
+  monitorFromFileRightSecond.position.set(110, 91.55, -270);
+  monitorFromFileRightSecond.rotateY(THREE.MathUtils.degToRad(10));
+  monitorFromFileRightSecond.addPhysics();
+  window.scene.add(monitorFromFileRightSecond);
 
   // Keyboard
-  // const keyboardFromFile = new KeyboardFromFile();
-  // keyboardFromFile.position.set(-65, 70, -225);
-  // keyboardFromFile.rotateY(THREE.MathUtils.degToRad(-35))
-  // window.scene.add(keyboardFromFile);
+  const keyboardFromFileLeft = new KeyboardFromFile();
+  keyboardFromFileLeft.position.set(-115, 70, -240);
+  window.scene.add(keyboardFromFileLeft);
+
+  const keyboardFromFileRight = new KeyboardFromFile();
+  keyboardFromFileRight.position.set(115, 70, -240);
+  window.scene.add(keyboardFromFileRight);
 
   // Mouse
-  // const mouseFromFile = new MouseFromFile();
-  // mouseFromFile.position.set(-50, 70, -210);
-  // mouseFromFile.rotateY(THREE.MathUtils.degToRad(-45));
-  // window.scene.add(mouseFromFile);
+  const mouseFromFileLeft = new MouseFromFile();
+  mouseFromFileLeft.position.set(-90, 70, -235);
+  mouseFromFileLeft.rotateY(THREE.MathUtils.degToRad(-25));
+  window.scene.add(mouseFromFileLeft);
+
+  const mouseFromFileRight = new MouseFromFile();
+  mouseFromFileRight.position.set(140, 70, -235);
+  mouseFromFileRight.rotateY(THREE.MathUtils.degToRad(-25));
+  window.scene.add(mouseFromFileRight);
+
+  // PC
+  const pcFromFileLeft = new PCFromFile();
+  pcFromFileLeft.position.set(-200, 19.8, -240);
+  pcFromFileLeft.addPhysics();
+  window.scene.add(pcFromFileLeft);
+
+  const pcFromFileRight = new PCFromFile();
+  pcFromFileRight.position.set(210, 19.8, -240);
+  pcFromFileRight.addPhysics();
+  window.scene.add(pcFromFileRight);
 
   // Phone
   // const phoneFromFile = new PhoneFromFile();
@@ -124,9 +169,28 @@ function main() {
   // window.scene.add(phoneFromFile);
 
   // Cup
-  // const cupFromFile = new CupFromFile();
-  // cupFromFile.position.set(0, 0, 0);
-  // window.scene.add(cupFromFile);
+  const cupFromFile = new CupFromFile();
+  cupFromFile.position.set(-170, 75, -235);
+  cupFromFile.rotateY(THREE.MathUtils.degToRad(35));
+  cupFromFile.addPhysics();
+  window.scene.add(cupFromFile);
+
+  // Plant
+  const plantFromFile = new PlantFromFile();
+  plantFromFile.position.set(55, 77.5, -250);
+  plantFromFile.addPhysics();
+  window.scene.add(plantFromFile);
+
+  // Trashbin
+  const trashbinFromFileLeft = new TrashbinFromFile();
+  trashbinFromFileLeft.position.set(-47, 18.5, -90);
+  trashbinFromFileLeft.addPhysics();
+  window.scene.add(trashbinFromFileLeft);
+
+  const trashbinFromFilRight = new TrashbinFromFile();
+  trashbinFromFilRight.position.set(57, 18.5, -90);
+  trashbinFromFilRight.addPhysics();
+  window.scene.add(trashbinFromFilRight);
 
   // ArmChair
   // const armChairFromFile = new ArmChairFromFile();
@@ -164,9 +228,6 @@ function main() {
   orbitControls.target = new THREE.Vector3(0, 0, 0);
   orbitControls.update();
 
-  // Connection to HTML Element
-  document.getElementById('3d_content').appendChild(window.renderer.domElement);
-
   // Setting the clock
   const clock = new THREE.Clock();
 
@@ -180,6 +241,12 @@ function main() {
 
     TWEEN.update();
 
+    if (printerFromFile.animationMixer !== null) {
+      printerFromFile.animationMixer.update(delta);
+    }
+
+    window.physics.update(delta);
+
     window.renderer.render(window.scene, window.camera);
     requestAnimationFrame(mainLoop);
   }
@@ -191,3 +258,5 @@ window.onload = main;
 window.onresize = updateAspectRatio;
 window.onmousemove = calculateMousePosition;
 window.onclick = executeRaycast;
+window.onkeydown = keyDownAction;
+window.onkeyup = keyUpAction;

@@ -511,7 +511,7 @@ export default class Printer extends THREE.Group {
     cube.position.set(0, 1, 0);
     cube.geometry.translate(0,1/2,0);
     cube.castShadow = true;
-    cube.renderOrder = 1;
+    cube.visible = false;
     plate.add(cube);
 
     let printTween = new TWEEN.Tween(cube.scale).to(new THREE.Vector3(
@@ -528,6 +528,7 @@ export default class Printer extends THREE.Group {
     startButton.castShadow = true;
     startButton.name = 'startButton';
     startButton.userData = {
+      cube,
       printheadRightTween,
       railUpTween,
       plateForwardTween,
@@ -545,7 +546,8 @@ export default class Printer extends THREE.Group {
     stopButton.userData = {
       printheadRightTween,
       railUpTween,
-      plateForwardTween
+      plateForwardTween,
+      printTween
     }
     this.add(stopButton);
 
@@ -567,5 +569,44 @@ export default class Printer extends THREE.Group {
     const footBackLeft = footFrontRight.clone();
     footBackLeft.position.set(-18, -1, -19);
     corpus.add(footBackLeft);
+  }
+
+  addPhysics() {
+
+    const positions = [
+      [20.1, 12.0, 25.5],     // 0
+      [-20.1, 12.0, 25.5],    // 1
+      [-20.1, -2.0, 25.5],   // 2
+      [20.1, -2.0, 25.5],    // 3
+      [20.1, 12.0, -20.2],    // 4
+      [-20.1, 12.0, -20.2],   // 5
+      [-20.1, -2.0, -20.2],  // 6
+      [20.1, -2.0, -20.2],    // 7
+      [20.1, 12.0, -7.5],   // 8
+      [-20.1, 12.0, -7.5],    // 9
+      [20.1, 58.0, -7.5] ,   // 10
+      [-20.1, 58.0, -7.5],    // 11
+      [20.1, 58.0, -1.2],    // 12
+      [-20.1, 58.0, -1.2],    // 13
+      [20.1, 12.0, -1.2],    // 14
+      [-20.1, 12.0, -1.2]   // 15
+    ];
+
+    const indices = [
+      [0, 1, 2, 3],  // front
+      [1, 5, 6, 2],  // left
+      [4, 0, 3, 7],  // right
+      [9, 8, 4, 5],  // topBack
+      [14, 15, 1, 0],  // topFront
+      [13, 12, 14, 15],  // frameFront ToDo
+      [11, 10, 8, 9],  // frameBack
+      [10, 11, 13, 12],  // frameTop
+      [10, 12, 14, 8],  // frameLeft
+      [13, 11, 9, 15],  // frameRight
+      [3, 2, 6, 7],  // bottom
+      [5, 4, 7, 6]   // back
+    ];
+
+    window.physics.addConvexPolyhedron(this, 3, positions, indices, true);
   }
 }
