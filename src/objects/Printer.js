@@ -14,83 +14,99 @@ export default class Printer extends THREE.Group {
 
   addParts() {
     // Materials
-    const testMaterial = new THREE.MeshPhongMaterial({
-      color: 0xdd0af0,
-      flatShading: true,
-      side: THREE.DoubleSide
-    });
-
-    const corpusMaterial = new THREE.MeshPhongMaterial({
+    const corpusMaterial = new THREE.MeshStandardMaterial({
       color: 0x373837,
       flatShading: true,
-      // metalness: 0.5,
+      metalness: 0.8,
+      roughness: 0.5,
       side: THREE.DoubleSide
     });
 
-    const frontCorpusMaterial = new THREE.MeshPhongMaterial({
-      color: 0x111111,
+    const frontCorpusMaterial = new THREE.MeshStandardMaterial({
+      color: 0x373837,
       flatShading: true,
       bumpMap: new THREE.TextureLoader().load('src/images/frontFrame.png'),
-      bumpScale: 1.0
+      bumpScale: 1.0,
+      metalness: 0.8,
+      roughness: 0.5
     });
 
-    const screwMaterial = new THREE.MeshPhongMaterial({
+    const labelMaterial = new THREE.MeshStandardMaterial({
+      color: 0x373837,
+      flatShading: true,
+      map: new THREE.TextureLoader().load('src/images/label.png'),
+      metalness: 0.8,
+      roughness: 0.5
+    });
+
+    const ventMaterial = new THREE.MeshStandardMaterial({
+      color: 0x373837,
+      flatShading: true,
+      bumpMap: new THREE.TextureLoader().load('src/images/sideVentBump.png'),
+      bumpScale: 1.0,
+      metalness: 0.8,
+      roughness: 0.5,
+      side: THREE.DoubleSide
+    });
+
+    const screwMaterial = new THREE.MeshStandardMaterial({
       color: 0x373837,
       flatShading: true,
       bumpMap: new THREE.TextureLoader().load('src/images/screwBump.png'),
-      bumpScale: 1.0
+      bumpScale: 1.0,
+      metalness: 0.8
     });
 
-    const frontFrameTopMaterial = new THREE.MeshPhongMaterial({
+    const frontFrameTopMaterial = new THREE.MeshStandardMaterial({
       color: 0x373837,
       bumpMap: new THREE.TextureLoader().load('src/images/frontFrameTop.png'),
-      bumpScale: 1.0
+      bumpScale: 1.0,
+      metalness: 0.8
     });
 
-    const frontFrameSideMaterial = new THREE.MeshPhongMaterial({
+    const frontFrameSideMaterial = new THREE.MeshStandardMaterial({
       color: 0x373837,
       flatShading: true,
       bumpMap: new THREE.TextureLoader().load('src/images/frontFrameSide.png'),
-      bumpScale: 0.5
+      bumpScale: 0.5,
+      metalness: 0.8
     });
 
-    const railMaterial = new THREE.MeshPhongMaterial({
+    const railMaterial = new THREE.MeshStandardMaterial({
       color: 0x373837,
       flatShading: true,
-      bumpMap: new THREE.TextureLoader().load('src/images/rail.png'),
-      bumpScale: 0.5
+      bumpMap: new THREE.TextureLoader().load('src/images/railBump.png'),
+      bumpScale: 0.5,
+      metalness: 0.8
     })
 
-    const printheadMaterial = new THREE.MeshPhongMaterial({
+    const printheadMaterial = new THREE.MeshStandardMaterial({
       color: 0x373837,
       flatShading: true,
-      bumpMap: new THREE.TextureLoader().load('src/images/ventSmall.png'),
-      bumpScale: 0.5
+      bumpMap: new THREE.TextureLoader().load('src/images/moonVentBump.png'),
+      bumpScale: 0.5,
+      metalness: 0.8
     })
 
-    const plateMaterial = new THREE.MeshPhongMaterial({
+    const plateMaterial = new THREE.MeshStandardMaterial({
       color: 0xe7e7e7,
       flatShading: true,
       transparent: true,
-      opacity: 0.8
+      opacity: 0.8,
+      roughness: 0.5
     });
 
-    const startButtonMaterial = new THREE.MeshPhongMaterial({
+    const startButtonMaterial = new THREE.MeshStandardMaterial({
       color: 0xfca503,
-      flatShading: true
+      flatShading: true,
     });
 
-    const stopButtonMaterial = new THREE.MeshPhongMaterial({
+    const stopButtonMaterial = new THREE.MeshStandardMaterial({
       color: 0xfc1703,
       flatShading: true
     });
 
-    const cubeMaterial = new THREE.MeshLambertMaterial({
-      visible: true,
-      colorWrite: false
-    });
-
-    const ballMaterial = new THREE.MeshPhongMaterial({
+    const cubeMaterial = new THREE.MeshStandardMaterial({
       color: 0xffaa00,
       side: THREE.DoubleSide,
       flatShading: true
@@ -312,12 +328,28 @@ export default class Printer extends THREE.Group {
     screwRightBack.position.set(15, 10.1, -12);
     corpus.add(screwRightBack);
 
-    // Front Corpus Texture
+    // Front Corpus Textures
     const frontCorpusGeometry = new THREE.PlaneGeometry(18, 10);
     const frontCorpus = new THREE.Mesh(frontCorpusGeometry, frontCorpusMaterial);
     frontCorpus.position.set(10, 6.5, 20.05);
     frontCorpus.rotateX(THREE.MathUtils.degToRad(-55));
     this.add(frontCorpus);
+
+    const leftLabel = new THREE.Mesh(frontCorpusGeometry, labelMaterial);
+    leftLabel.position.set(-10, 6.5, 20.07);
+    leftLabel.rotateX(THREE.MathUtils.degToRad(-55));
+    this.add(leftLabel);
+
+    // Vent Textures
+    const ventRightGeometry = new THREE.PlaneGeometry(5.5, 5);
+    const ventRight = new THREE.Mesh(ventRightGeometry, ventMaterial);
+    ventRight.position.set(20.1, 6.5, 9);
+    ventRight.rotateY(THREE.MathUtils.degToRad(90));
+    this.add(ventRight);
+
+    const ventLeft = ventRight.clone();
+    ventLeft.position.set(-20.1, 6.5, 9);
+    this.add(ventLeft);
 
     // Frame
     const frameGeometry = new THREE.BufferGeometry();
@@ -434,8 +466,6 @@ export default class Printer extends THREE.Group {
         rail.position.z), 2000)
         .easing(TWEEN.Easing.Linear.None)
 
-    // railUpTween.chain(railDownTween);
-
     // Left Bracket
     const leftBracketGeometry = new THREE.BoxGeometry(5, 5, 2);
     const leftBracket = new THREE.Mesh(leftBracketGeometry, corpusMaterial);
@@ -455,7 +485,7 @@ export default class Printer extends THREE.Group {
     printheadGeometry.setIndex(indicesPrinthead);
     printheadGeometry.computeVertexNormals();
     const printhead = new THREE.Mesh(printheadGeometry, corpusMaterial);
-    printhead.position.set(-13, -17, 2.25);
+    printhead.position.set(-13, -18, 2.25);
     printhead.castShadow = true;
     printhead.name = 'printhead';
     rail.add(printhead);
@@ -484,30 +514,9 @@ export default class Printer extends THREE.Group {
 
     printheadRightTween.chain(printheadLeftTween);
 
-    // Printing Object
-    // const ballGeometry = new THREE.SphereGeometry(10, 10, 10);
-    // const ball = new THREE.Mesh(ballGeometry, ballMaterial);
-    // ball.position.set(0, 10.5, 0);
-    // ball.castShadow = true;
-    // ball.renderOrder = 1;
-    // plate.add(ball);
-
-    // Hiding Cube
-    // const cubeGeometry = new THREE.BoxGeometry(20, 20, 20);
-    // const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-    // cube.position.set(0, 10.5, 0);
-    // cube.renderOrder = 0;
-    // plate.add(cube);
-
-    // Unhide Animation
-    // let cubeUpTween = new TWEEN.Tween(cube.position).to(new THREE.Vector3(
-    //     cube.position.x,
-    //     cube.position.y + 70,
-    //     cube.position.z), 8000)
-    //     .easing(TWEEN.Easing.Linear.None)
-
+    // Printing Object Animation
     const cubeGeometry = new THREE.BoxGeometry(15,1,15);
-    const cube = new THREE.Mesh(cubeGeometry, ballMaterial);
+    const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
     cube.position.set(0, 1, 0);
     cube.geometry.translate(0,1/2,0);
     cube.castShadow = true;
@@ -533,7 +542,6 @@ export default class Printer extends THREE.Group {
       railUpTween,
       plateForwardTween,
       printTween
-      // cubeUpTween
     }
     this.add(startButton);
 
@@ -560,53 +568,53 @@ export default class Printer extends THREE.Group {
 
     const footFrontLeft = footFrontRight.clone();
     footFrontLeft.position.set(-18, -1, 22);
+    footFrontLeft.castShadow = true;
     corpus.add(footFrontLeft);
 
     const footBackRight = footFrontRight.clone();
     footBackRight.position.set(18, -1, -19);
+    footBackRight.castShadow = true;
     corpus.add(footBackRight);
 
     const footBackLeft = footFrontRight.clone();
     footBackLeft.position.set(-18, -1, -19);
+    footBackLeft.castShadow = true;
     corpus.add(footBackLeft);
   }
 
   addPhysics() {
 
     const positions = [
-      [20.1, 15.0, 15.0],     // 0
-      [-20.1, 15.0, 15.0],    // 1
+      [20.1, 15.0, 11.0],     // 0
+      [-20.1, 15.0, 11.0],    // 1
       [-20.1, -2.0, 26.5],   // 2
       [20.1, -2.0, 26.5],    // 3
+
       [20.1, 15.0, -20.2],    // 4
       [-20.1, 15.0, -20.2],   // 5
       [-20.1, -2.0, -20.2],  // 6
       [20.1, -2.0, -20.2],    // 7
-      [20.1, 12.0, -7.5],   // 8
-      [-20.1, 12.0, -7.5],    // 9
-      [20.1, 58.0, -7.5] ,   // 10
-      [-20.1, 58.0, -7.5],    // 11
-      [20.1, 58.0, 0.2],    // 12
-      [-20.1, 58.0, 0.2],    // 13
-      [20.1, 12.0, 0.2],    // 14
-      [-20.1, 12.0, 0.2]   // 15
+
+      [20.1, 58.0, -7.5] ,   // 8
+      [-20.1, 58.0, -7.5],    // 9
+
+      [20.1, 58.0, -2.2],    // 10
+      [-20.1, 58.0, -2.2],    // 11
     ];
 
     const indices = [
       [0, 1, 2, 3],  // front
       [1, 5, 6, 2],  // left
       [4, 0, 3, 7],  // right
-      [9, 8, 4, 5],  // topBack
-      [14, 15, 1, 0],  // topFront
-      [12, 13, 14, 15],  // frameFront
-      [11, 10, 8, 9],  // frameBack
-      [10, 11, 13, 12],  // frameTop
-      [10, 12, 14, 8],  // frameLeft
-      [13, 11, 9, 15],  // frameRight
+      [10, 11, 1, 0],  // frameFront
+      [9, 8, 4, 5],  // frameBack
+      [8, 9, 11, 10],  // frameTop
+      [8, 10, 0, 4],  // frameLeft
+      [11, 9, 5, 1],  // frameRight
       [3, 2, 6, 7],  // bottom
       [5, 4, 7, 6]   // back
     ];
 
-    window.physics.addConvexPolyhedron(this, 3, positions, indices, true);
+    window.physics.addConvexPolyhedron(this, 4, positions, indices, true);
   }
 }

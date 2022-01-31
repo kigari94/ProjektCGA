@@ -62,7 +62,7 @@ export default class MonitorFromFile extends THREE.Group {
         [9, 8, 11, 10]  // bottom
       ];
 
-      window.physics.addConvexPolyhedron(this, 3, positions, indices, true);
+      window.physics.addConvexPolyhedron(this, 5, positions, indices, true);
     }
   }
 }

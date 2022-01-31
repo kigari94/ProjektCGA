@@ -6,13 +6,12 @@ export default class RoomFromFile extends THREE.Group {
   constructor() {
     super();
     this.gltfLoader = new GLTFLoader();
-    this.loadingDone = false;
     this.load(this);
   }
 
   load(thisRoom) {
 
-    this.gltfLoader.load('src/models/roomhighRes.gltf', function (gltf) {
+    this.gltfLoader.load('src/models/room.gltf', function (gltf) {
 
       gltf.scene.traverse(function (child) {
 
@@ -23,7 +22,6 @@ export default class RoomFromFile extends THREE.Group {
       });
 
       thisRoom.add(gltf.scene);
-      thisRoom.loadingDone = true;
     });
   }
 }

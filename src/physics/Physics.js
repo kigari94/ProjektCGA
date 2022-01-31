@@ -113,6 +113,36 @@ export default class Physics {
     this.addPair(object, body);
   }
 
+  addCustomBox(object, mass, dimXRB, dimYRB, dimZRB, dimXLB, dimYLB, dimZLB, offsetXLB = 0, offsetYLB = 0, offsetZLB = 0,
+       offsetXRB = 0, offsetYRB = 0, offsetZRB = 0, sleeping = false) {
+
+    // Create body with specified mass
+    const body = new CANNON.Body({mass: mass});
+
+    // Add shape (~collider) to physical body
+    const dimensionLB = new CANNON.Vec3(dimXLB / 2, dimYLB / 2, dimZLB / 2);
+    const dimensionRB = new CANNON.Vec3(dimXRB / 2, dimYRB / 2, dimZRB / 2);
+    const offsetLeft = new CANNON.Vec3(offsetXLB, offsetYLB, offsetZLB);
+    const offsetRight = new CANNON.Vec3(offsetXRB, offsetYRB, offsetZRB);
+    body.addShape(new CANNON.Box(dimensionLB), offsetLeft);
+    body.addShape(new CANNON.Box(dimensionRB), offsetRight);
+
+    // Copy initial transformation from visual object
+    body.position.copy(object.position);
+    body.quaternion.copy(object.quaternion);
+
+    // Set body to sleep if required
+    if (sleeping) {
+      body.sleep();
+    }
+
+    // Add body to physical world
+    this.world.addBody(body);
+
+    // Register object-body-pair
+    this.addPair(object, body);
+  }
+
   addCylinder(object, mass, upperRadius, lowerRadius, height, segments,
               offsetX = 0, offsetY = 0, offsetZ = 0,
               eulerX = 0, eulerY = 0, eulerZ = 0,

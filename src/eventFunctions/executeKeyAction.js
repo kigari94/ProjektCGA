@@ -8,7 +8,7 @@ export function keyDownAction(event) {
       if (!window.spaceDown) {
         window.spaceDown = true;
 
-        const cubeLength = 8;
+        const cubeLength = 15;
         const cubeGeometry = new THREE.BoxGeometry(cubeLength, cubeLength, cubeLength);
         const cube = new THREE.Mesh(cubeGeometry, new THREE.MeshLambertMaterial({color: 0xffaa00}));
 

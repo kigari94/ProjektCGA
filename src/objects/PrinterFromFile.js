@@ -26,6 +26,8 @@ export default class PrinterFromFile extends THREE.Group {
 
                 if (child.isMesh) {
                     child.userData = thisPrinter;
+                    child.castShadow = true;
+                    child.receShadow = true;
                 }
 
                 if (child.name === 'cubeGLTF') {
@@ -41,6 +43,8 @@ export default class PrinterFromFile extends THREE.Group {
                 thisPrinter.animations.set(gltf.animations[i].name, action);
             }
 
+            // gltf.scene.position.set(0, 0, 0);
+
             thisPrinter.add(gltf.scene);
             thisPrinter.loadingDone = true;
         });
@@ -49,39 +53,36 @@ export default class PrinterFromFile extends THREE.Group {
     addPhysics() {
 
         const positions = [
-            [20.1, 15.0, 15.0],     // 0
-            [-20.1, 15.0, 15.0],    // 1
-            [-20.1, -2.0, 26.5],   // 2
-            [20.1, -2.0, 26.5],    // 3
+            [20.1, 15.0, 11.0],     // 0
+            [-20.1, 15.0, 11.0],    // 1
+            [-20.1, 0.0, 26.5],     // 2
+            [20.1, 0.0, 26.5],      // 3
+
             [20.1, 15.0, -20.2],    // 4
             [-20.1, 15.0, -20.2],   // 5
-            [-20.1, -2.0, -20.2],  // 6
-            [20.1, -2.0, -20.2],    // 7
-            [20.1, 12.0, -7.5],   // 8
-            [-20.1, 12.0, -7.5],    // 9
-            [20.1, 58.0, -7.5] ,   // 10
-            [-20.1, 58.0, -7.5],    // 11
-            [20.1, 58.0, 0.2],    // 12
-            [-20.1, 58.0, 0.2],    // 13
-            [20.1, 12.0, 0.2],    // 14
-            [-20.1, 12.0, 0.2]   // 15
+            [-20.1, 0.0, -20.2],    // 6
+            [20.1, 0.0, -20.2],     // 7
+
+            [20.1, 59.0, -5.5] ,    // 8
+            [-20.1, 59.0, -5.5],    // 9
+
+            [20.1, 59.0, -0.2],     // 10
+            [-20.1, 59.0, -0.2],    // 11
         ];
 
         const indices = [
             [0, 1, 2, 3],  // front
             [1, 5, 6, 2],  // left
             [4, 0, 3, 7],  // right
-            [9, 8, 4, 5],  // topBack
-            [14, 15, 1, 0],  // topFront
-            [12, 13, 14, 15],  // frameFront
-            [11, 10, 8, 9],  // frameBack
-            [10, 11, 13, 12],  // frameTop
-            [10, 12, 14, 8],  // frameLeft
-            [13, 11, 9, 15],  // frameRight
+            [10, 11, 1, 0],  // frameFront
+            [9, 8, 4, 5],  // frameBack
+            [8, 9, 11, 10],  // frameTop
+            [8, 10, 0, 4],  // frameLeft
+            [11, 9, 5, 1],  // frameRight
             [3, 2, 6, 7],  // bottom
             [5, 4, 7, 6]   // back
         ];
 
-        window.physics.addConvexPolyhedron(this, 3, positions, indices, true);
+        window.physics.addConvexPolyhedron(this, 4, positions, indices, true);
     }
 }

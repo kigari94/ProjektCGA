@@ -1,7 +1,6 @@
 // external libaries
 import * as THREE from '../lib/three.js-r134/build/three.module.js';
 import * as CONTROLS from '../lib/three.js-r134/examples/jsm/controls/OrbitControls.js';
-import * as DAT from '../lib/dat.gui-0.7.7/build/dat.gui.module.js';
 import * as TWEEN from '../../../lib/tween.js-18.6.4/dist/tween.esm.js';
 
 // Own modules
@@ -15,12 +14,12 @@ import DeskRightFromFile from './objects/DeskRightFromFile.js';
 import MonitorFromFile from './objects/MonitorFromFile.js';
 import KeyboardFromFile from './objects/KeyboardFromFile.js';
 import MouseFromFile from './objects/MouseFromFile.js';
-import PhoneFromFile from './objects/PhoneFromFile.js';
 import CupFromFile from './objects/CupFromFile.js';
 import ChairFromFile from './objects/ChairFromFile.js';
 import PlantFromFile from './objects/PlantFromFile.js';
 import TrashbinFromFile from './objects/TrashbinFromFile.js';
 import PCFromFile from './objects/PCFromFile.js';
+import PictureFromFile from './objects/PictureFromFile.js';
 
 // Physics
 import Physics from './physics/Physics.js';
@@ -35,7 +34,6 @@ function main() {
 
   // Scene
   window.scene = new THREE.Scene();
-  window.scene.add(new THREE.AxesHelper(50));
 
   // Camera
   window.camera = new THREE.PerspectiveCamera(
@@ -43,10 +41,10 @@ function main() {
       window.innerWidth /
       window.innerHeight,
       0.1,
-      2000
+      1100
   );
-  window.camera.position.set(100, 100, 100);
-  window.camera.lookAt(0, 100, -150);
+  window.camera.position.set(-200, 200, 80);
+
   // window.scene.add(new THREE.CameraHelper(window.camera));
 
   // Renderer
@@ -54,9 +52,10 @@ function main() {
   window.renderer.setSize(window.innerWidth, window.innerHeight);
   window.renderer.setClearColor(0xffffff);
   window.renderer.shadowMap.enabled = true;
+  window.renderer.physicallyCorrectLights = false;
 
   // Physics
-  window.physics = new Physics(true);
+  window.physics = new Physics(false);
   window.physics.setup(0, -200, 0, 1 / 240, true);
 
   // Connection to HTML Element
@@ -87,7 +86,7 @@ function main() {
 
   // Printer
   let printer = new Printer();
-  printer.position.set(-45, 73, -150);
+  printer.position.set(-45, 72, -150);
   printer.rotation.set(0, THREE.MathUtils.degToRad(-90), 0);
   printer.addPhysics();
   window.scene.add(printer);
@@ -100,12 +99,13 @@ function main() {
 
   // Desk
   const deskLeftFromFile = new DeskLeftFromFile();
-  deskLeftFromFile.position.set(-30, 0, -250);
+  deskLeftFromFile.position.set(-100, 0, -250);
   deskLeftFromFile.addPhysics();
   window.scene.add(deskLeftFromFile);
 
   const deskRightFromFile = new DeskRightFromFile();
   deskRightFromFile.position.set(100, 0, -250);
+  deskRightFromFile.addPhysics();
   window.scene.add(deskRightFromFile);
 
   // Chair
@@ -181,12 +181,6 @@ function main() {
   pcFromFileRight.addPhysics();
   window.scene.add(pcFromFileRight);
 
-  // Phone
-  // const phoneFromFile = new PhoneFromFile();
-  // phoneFromFile.position.set(-130, 70, -250);
-  // phoneFromFile.rotateY(THREE.MathUtils.degToRad(40))
-  // window.scene.add(phoneFromFile);
-
   // Cup
   const cupFromFile = new CupFromFile();
   cupFromFile.position.set(-170, 75, -235);
@@ -211,35 +205,66 @@ function main() {
   trashbinFromFilRight.addPhysics();
   window.scene.add(trashbinFromFilRight);
 
+  // Picture
+  const pictureFromFile = new PictureFromFile();
+  pictureFromFile.position.set(0, 150, -290);
+  // pictureFromFile.addPhysics();
+  window.scene.add(pictureFromFile);
+
+  // LightSpot
+  const leftLightSpot = new THREE.Object3D();
+  leftLightSpot.position.set(-140, 0, -40);
+  window.scene.add(leftLightSpot);
+
+  const rightLightSpot = new THREE.Object3D();
+  rightLightSpot.position.set(130, 0, -40);
+  window.scene.add(rightLightSpot);
+
   // Lighting
   const ambientLight = new THREE.AmbientLight(0xffffff);
-  // ambientLight.intensity = 0.5;
+  ambientLight.intensity = 0.5;
   window.scene.add(ambientLight);
 
-  let spotLight = new THREE.SpotLight(0xffffff);
-  spotLight.position.set(100, 100, 100);
-  spotLight.intensity = 0.5;
-  // spotLight.target = plane;
-  spotLight.angle = THREE.MathUtils.degToRad((30));
-  spotLight.penumbra = 1;
-  spotLight.castShadow = true;
-  spotLight.shadow.mapSize.set(2048, 2048);
-  spotLight.shadow.camera.aspect = 1;
-  spotLight.shadow.camera.near = 10;
-  spotLight.shadow.camera.far = 500;
+  // Spotlights
+  let spotLightWindowLeft = new THREE.SpotLight(0xffffff);
+  spotLightWindowLeft.position.set(-150, 170, -295);
+  spotLightWindowLeft.intensity = 0.5;
+  spotLightWindowLeft.power = 3;
+  spotLightWindowLeft.target = leftLightSpot;
+  spotLightWindowLeft.angle = THREE.MathUtils.degToRad((80));
+  spotLightWindowLeft.penumbra = 1;
+  spotLightWindowLeft.castShadow = true;
 
-  window.scene.add(new THREE.CameraHelper(spotLight.shadow.camera));
-  window.scene.add(spotLight);
+  spotLightWindowLeft.shadow.mapSize.set(2048, 2048);
+  spotLightWindowLeft.shadow.camera.aspect = 1;
+  spotLightWindowLeft.shadow.camera.near = 10;
+  spotLightWindowLeft.shadow.camera.far = 500;
+  spotLightWindowLeft.shadow.bias = -0.001;
 
-  // DAT GUI
-  let gui = new DAT.GUI();
-  gui.add(spotLight.position, 'x', 0, 200).step(5);
-  gui.add(spotLight.position, 'y', 0, 200).step(5);
-  gui.add(spotLight.position, 'z', 0, 200).step(5);
+  // window.scene.add(new THREE.CameraHelper(spotLightWindowLeft.shadow.camera));
+  window.scene.add(spotLightWindowLeft);
+
+  let spotLightWindowRight = new THREE.SpotLight(0xffffff);
+  spotLightWindowRight.position.set(150, 170, -295);
+  spotLightWindowRight.intensity = 0.5;
+  spotLightWindowRight.power = 3;
+  spotLightWindowRight.target = rightLightSpot;
+  spotLightWindowRight.angle = THREE.MathUtils.degToRad((80));
+  spotLightWindowRight.penumbra = 1;
+  spotLightWindowRight.castShadow = true;
+
+  spotLightWindowRight.shadow.mapSize.set(2048, 2048);
+  spotLightWindowRight.shadow.camera.aspect = 1;
+  spotLightWindowRight.shadow.camera.near = 10;
+  spotLightWindowRight.shadow.camera.far = 500;
+  spotLightWindowRight.shadow.bias = -0.001;
+
+  // window.scene.add(new THREE.CameraHelper(spotLightWindowRight.shadow.camera));
+  window.scene.add(spotLightWindowRight);
 
   // Orbit controls
-  let orbitControls = new CONTROLS.OrbitControls(window.camera, window.renderer.domElement);
-  orbitControls.target = new THREE.Vector3(0, 0, 0);
+  const orbitControls = new CONTROLS.OrbitControls(window.camera, window.renderer.domElement);
+  orbitControls.target = new THREE.Vector3(0, 0, -250);
   orbitControls.update();
 
   // Setting the clock
@@ -248,10 +273,6 @@ function main() {
   // Main loop
   function mainLoop() {
     const delta = clock.getDelta();
-
-    printer.animations.forEach(function (animation) {
-      animation.update(delta);
-    });
 
     TWEEN.update();
 
