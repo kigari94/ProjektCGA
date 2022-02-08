@@ -1,7 +1,5 @@
-import * as THREE from '../../lib/three.js-r134/build/three.module.js';
-import CSG from '../../lib/three-csg-2020/dist/three-csg.js';
-import {Animation, AnimationType, AnimationAxis} from "../animation/Animation.js";
-import * as TWEEN from '../../../../lib/tween.js-18.6.4/dist/tween.esm.js'
+import * as THREE from '../../../lib/three.js-r134/build/three.module.js';
+import * as TWEEN from '../../../lib/tween.js-18.6.4/dist/tween.esm.js'
 
 export default class Printer extends THREE.Group {
 
@@ -27,14 +25,6 @@ export default class Printer extends THREE.Group {
       flatShading: true,
       bumpMap: new THREE.TextureLoader().load('src/images/frontFrame.png'),
       bumpScale: 1.0,
-      metalness: 0.8,
-      roughness: 0.5
-    });
-
-    const labelMaterial = new THREE.MeshStandardMaterial({
-      color: 0x373837,
-      flatShading: true,
-      map: new THREE.TextureLoader().load('src/images/label.png'),
       metalness: 0.8,
       roughness: 0.5
     });
@@ -334,11 +324,6 @@ export default class Printer extends THREE.Group {
     frontCorpus.position.set(10, 6.5, 20.05);
     frontCorpus.rotateX(THREE.MathUtils.degToRad(-55));
     this.add(frontCorpus);
-
-    const leftLabel = new THREE.Mesh(frontCorpusGeometry, labelMaterial);
-    leftLabel.position.set(-10, 6.5, 20.07);
-    leftLabel.rotateX(THREE.MathUtils.degToRad(-55));
-    this.add(leftLabel);
 
     // Vent Textures
     const ventRightGeometry = new THREE.PlaneGeometry(5.5, 5);

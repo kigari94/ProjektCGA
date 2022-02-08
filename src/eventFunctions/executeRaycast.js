@@ -8,7 +8,6 @@ export function executeRaycast() {
 
   let intersects = window.raycaster.intersectObject(window.scene, true);
 
-  //console.log(intersects.length);
   if (intersects.length > 0) {
 
     let firstHit = intersects[0].object;
@@ -25,7 +24,6 @@ export function executeRaycast() {
       firstHit.userData.cube.visible = true;
 
       firstHit.userData.printheadRightTween.repeat(8);
-      // firstHit.userData.plateForwardTween.repeat(10);
     }
     else if(firstHit.name === 'stopButton'){
       firstHit.userData.printheadRightTween.stop();
@@ -39,7 +37,7 @@ export function executeRaycast() {
         !firstHit.userData.animations.get('print_on').isRunning() &&
         !firstHit.userData.animations.get('rail_on').isRunning() &&
         !firstHit.userData.animations.get('printhead_on').isRunning()) {
-      firstHit.userData.state.powerOn = !firstHit.userData.state.powerOn;
+        firstHit.userData.state.powerOn = !firstHit.userData.state.powerOn;
       if (firstHit.userData.state.powerOn) {
         firstHit.userData.animations.get('plate_on').play();
         firstHit.userData.animations.get('print_on').play();
@@ -51,10 +49,10 @@ export function executeRaycast() {
           firstHit.userData.animations.get('print_on').reset();
           firstHit.userData.animations.get('rail_on').reset();
           firstHit.userData.animations.get('printhead_on').reset();
+          firstHit.userData.state.powerOn = !firstHit.userData.state.powerOn;
       }
     } else if (firstHit.name === 'stopButtonGLTF' &&
         firstHit.userData.animations.get('rail_on').isRunning()) {
-      firstHit.userData.state.powerOn = !firstHit.userData.state.powerOn;
       if (firstHit.userData.state.powerOn) {
         firstHit.userData.animations.get('plate_on').paused = true;
         firstHit.userData.animations.get('print_on').paused = true;

@@ -43,8 +43,6 @@ export default class PrinterFromFile extends THREE.Group {
                 thisPrinter.animations.set(gltf.animations[i].name, action);
             }
 
-            // gltf.scene.position.set(0, 0, 0);
-
             thisPrinter.add(gltf.scene);
             thisPrinter.loadingDone = true;
         });

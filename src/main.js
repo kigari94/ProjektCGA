@@ -1,7 +1,7 @@
 // external libaries
-import * as THREE from '../lib/three.js-r134/build/three.module.js';
-import * as CONTROLS from '../lib/three.js-r134/examples/jsm/controls/OrbitControls.js';
-import * as TWEEN from '../../../lib/tween.js-18.6.4/dist/tween.esm.js';
+import * as THREE from '../../lib/three.js-r134/build/three.module.js';
+import * as CONTROLS from '../../lib/three.js-r134/examples/jsm/controls/OrbitControls.js';
+import * as TWEEN from '../../lib/tween.js-18.6.4/dist/tween.esm.js';
 
 // Own modules
 import Printer from './objects/Printer.js';
@@ -19,7 +19,6 @@ import ChairFromFile from './objects/ChairFromFile.js';
 import PlantFromFile from './objects/PlantFromFile.js';
 import TrashbinFromFile from './objects/TrashbinFromFile.js';
 import PCFromFile from './objects/PCFromFile.js';
-import PictureFromFile from './objects/PictureFromFile.js';
 
 // Physics
 import Physics from './physics/Physics.js';
@@ -41,11 +40,9 @@ function main() {
       window.innerWidth /
       window.innerHeight,
       0.1,
-      1100
+      1050
   );
   window.camera.position.set(-200, 200, 80);
-
-  // window.scene.add(new THREE.CameraHelper(window.camera));
 
   // Renderer
   window.renderer = new THREE.WebGLRenderer({antialias: true});
@@ -204,12 +201,6 @@ function main() {
   trashbinFromFilRight.position.set(57, 18.5, -90);
   trashbinFromFilRight.addPhysics();
   window.scene.add(trashbinFromFilRight);
-
-  // Picture
-  const pictureFromFile = new PictureFromFile();
-  pictureFromFile.position.set(0, 150, -290);
-  // pictureFromFile.addPhysics();
-  window.scene.add(pictureFromFile);
 
   // LightSpot
   const leftLightSpot = new THREE.Object3D();
